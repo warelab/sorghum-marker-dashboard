@@ -38,7 +38,6 @@ const els = {
   feedbackCount: document.querySelector("#feedbackCount"),
   collaboratorBars: document.querySelector("#collaboratorBars"),
   traitBars: document.querySelector("#traitBars"),
-  priorityBars: document.querySelector("#priorityBars"),
   chromosomeBars: document.querySelector("#chromosomeBars"),
   regionBars: document.querySelector("#regionBars"),
   denseGenes: document.querySelector("#denseGenes"),
@@ -102,17 +101,6 @@ function renderStaticCharts() {
       name: row.name,
       count: row.count,
     })),
-  );
-
-  barList(
-    els.priorityBars,
-    data.priorityCounts
-      .filter((row) => row.name !== "Unspecified")
-      .sort((a, b) => Number(a.name) - Number(b.name))
-      .map((row) => ({
-        name: `Priority ${row.name}`,
-        count: row.count,
-      })),
   );
 
   const regionRows = data.regionSummary.map((row) => ({
