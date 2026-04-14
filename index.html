@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sorghum Marker Database</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Sorghum 100K marker panel</p>
+          <h1>Marker database dashboard</h1>
+          <p class="dek">Collaborator marker inventory, trait coverage, chromosome distribution, and annotation summary for array panel review.</p>
+        </div>
+        <div class="source-note">
+          <span>Data bundle</span>
+          <strong id="dataSourceCount">0 sources</strong>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Marker summary">
+        <div class="metric">
+          <span>Total entries</span>
+          <strong id="totalMarkers">0</strong>
+        </div>
+        <div class="metric">
+          <span>Curated markers</span>
+          <strong id="curatedMarkers">0</strong>
+        </div>
+        <div class="metric">
+          <span>Array panel markers</span>
+          <strong id="arrayPanelMarkers">0</strong>
+        </div>
+        <div class="metric">
+          <span>Collaborators</span>
+          <strong id="collaborators">0</strong>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="filters" aria-label="Filters">
+          <div class="filter-group">
+            <label for="searchInput">Search catalog</label>
+            <input id="searchInput" type="search" placeholder="Trait, locus, source, evidence" />
+          </div>
+          <div class="filter-group">
+            <label for="sourceFilter">Collaborator</label>
+            <select id="sourceFilter"></select>
+          </div>
+          <div class="filter-group">
+            <label for="traitFilter">Trait</label>
+            <select id="traitFilter"></select>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="chromFilter">Chr</label>
+              <select id="chromFilter"></select>
+            </div>
+            <div class="filter-group">
+              <label for="priorityFilter">Priority</label>
+              <select id="priorityFilter"></select>
+            </div>
+          </div>
+          <button id="resetFilters" type="button">Reset filters</button>
+          <button id="exportCsv" type="button" class="secondary">Export filtered CSV</button>
+
+          <div class="review-panel" aria-label="Collaborator feedback">
+            <div>
+              <p class="eyebrow">Feedback</p>
+              <h2>Review markers</h2>
+              <p class="small-copy">Select a marker from the table, add a decision and note, then export your feedback CSV.</p>
+            </div>
+            <div class="filter-group">
+              <label for="reviewerName">Reviewer</label>
+              <input id="reviewerName" type="text" placeholder="Name" autocomplete="name" />
+            </div>
+            <div class="filter-group">
+              <label for="reviewerSource">Group</label>
+              <select id="reviewerSource"></select>
+            </div>
+            <div class="selected-marker" id="selectedMarker">
+              <span>No marker selected</span>
+            </div>
+            <div class="filter-group">
+              <label for="feedbackDecision">Decision</label>
+              <select id="feedbackDecision">
+                <option value="confirm">Confirm marker</option>
+                <option value="revise">Revise details</option>
+                <option value="remove">Remove from panel</option>
+                <option value="question">Question / needs discussion</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="feedbackComment">Comment</label>
+              <textarea id="feedbackComment" placeholder="Correction, evidence, coordinate issue, trait note, or publication reference"></textarea>
+            </div>
+            <button id="saveFeedback" type="button">Save feedback</button>
+            <button id="exportFeedback" type="button" class="secondary">Export feedback CSV</button>
+            <button id="clearFeedback" type="button" class="ghost">Clear saved feedback</button>
+            <p class="small-copy"><strong id="feedbackCount">0</strong> saved feedback items in this browser.</p>
+          </div>
+        </aside>
+
+        <section class="analysis" aria-label="Dashboard panels">
+          <div class="section-heading">
+            <div>
+              <h2>Collaborator coverage</h2>
+              <p>Counts include the curated catalog plus Meseret Wondifraw’s 9,115-marker array panel entry from the extraction report.</p>
+            </div>
+          </div>
+          <div id="collaboratorBars" class="bar-list"></div>
+
+          <div class="split">
+            <section>
+              <h2>Top trait categories</h2>
+              <div id="traitBars" class="bar-list compact"></div>
+            </section>
+            <section>
+              <h2>Priority mix</h2>
+              <div id="priorityBars" class="bar-list compact"></div>
+            </section>
+          </div>
+
+          <section>
+            <h2>Chromosome distribution</h2>
+            <div id="chromosomeBars" class="chromosome-bars"></div>
+          </section>
+
+          <section>
+            <div class="section-heading">
+              <div>
+                <h2>Curated catalog</h2>
+                <p><span id="visibleCount">0</span> markers visible after filters.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Standard ID</th>
+                    <th>Trait</th>
+                    <th>Original name</th>
+                    <th>Chr</th>
+                    <th>Position</th>
+                    <th>Priority</th>
+                    <th>Source</th>
+                    <th>Evidence</th>
+                    <th>Feedback</th>
+                  </tr>
+                </thead>
+                <tbody id="catalogBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="split">
+            <section>
+              <h2>Annotation region class</h2>
+              <div id="regionBars" class="bar-list compact"></div>
+            </section>
+            <section>
+              <h2>Dense marker genes</h2>
+              <div id="denseGenes" class="gene-list"></div>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
