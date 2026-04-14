@@ -1,0 +1,337 @@
+#!/usr/bin/env python3
+"""Build the static data bundle used by the marker dashboard."""
+
+from __future__ import annotations
+
+import csv
+import json
+import re
+from collections import Counter
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "dashboard" / "data.js"
+NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
+
+
+COLLABORATOR_META = {
+    "Harris/USDA": {
+        "display": "Karen Harris",
+        "institution": "USDA-ARS, Tifton, GA",
+        "focus": "Root-knot nematode resistance",
+    },
+    "Behera/AAU": {
+        "display": "Partha Behera",
+        "institution": "Assam Agricultural University",
+        "focus": "Forage sorghum adaptive traits",
+    },
+    "Tuinstra/Purdue": {
+        "display": "Mitchell Tuinstra",
+        "institution": "Purdue University",
+        "focus": "Functional trait markers",
+    },
+    "EIB/AgriPlex": {
+        "display": "EIB/AgriPlex",
+        "institution": "ICRISAT / Industry",
+        "focus": "Trait-linked SNP panel",
+    },
+    "Fattel/Clemson": {
+        "display": "Leila Fattel",
+        "institution": "Clemson University",
+        "focus": "Sugar accumulation and transport",
+    },
+    "Tadesse/USDA": {
+        "display": "Dimiru Tadesse",
+        "institution": "USDA-ARS",
+        "focus": "Photoperiod pathway genes",
+    },
+    "Odeny/ICRISAT": {
+        "display": "Damaris Odeny",
+        "institution": "ICRISAT",
+        "focus": "Drought and Striga resistance",
+    },
+    "Cuevas/USDA": {
+        "display": "Hugo Cuevas",
+        "institution": "USDA-ARS",
+        "focus": "Anthracnose and rust resistance",
+    },
+    "Saini/TTU": {
+        "display": "Dinesh Saini",
+        "institution": "Texas Tech University",
+        "focus": "Functional traits and QTLs",
+    },
+    "Varma/SRM-IST": {
+        "display": "Raja Varma",
+        "institution": "SRM Institute of Science & Technology",
+        "focus": "lncRNA regulatory networks",
+    },
+    "Marla/KSU": {
+        "display": "Sandeep Marla",
+        "institution": "Kansas State University",
+        "focus": "STRAIT-KIN CSHL 100k panel markers",
+    },
+    "Yerka/YJ": {
+        "display": "Yerka YJ",
+        "institution": "GWAS panel",
+        "focus": "Grain composition",
+    },
+    "Enyew/WSU": {
+        "display": "Muluken Enyew",
+        "institution": "Washington State University",
+        "focus": "Agronomic traits and root architecture",
+    },
+    "Jura/SbMATE": {
+        "display": "Jura Magalhaes",
+        "institution": "SbMATE aluminum tolerance",
+        "focus": "AltSB/SbMATE functional markers",
+    },
+    "Meseret/BI": {
+        "display": "Meseret Wondifraw",
+        "institution": "ICRISAT / Bioversity International",
+        "focus": "100K SNP array panel design",
+    },
+}
+
+
+SOURCE_CODES = {
+    "Harris/USDA": "HAR-USDA",
+    "Behera/AAU": "BEH-AAU",
+    "Tuinstra/Purdue": "TUI-PUR",
+    "EIB/AgriPlex": "EIB-AGR",
+    "Fattel/Clemson": "FAT-CLE",
+    "Tadesse/USDA": "TAD-USDA",
+    "Odeny/ICRISAT": "ODE-ICR",
+    "Cuevas/USDA": "CUE-USDA",
+    "Saini/TTU": "SAI-TTU",
+    "Varma/SRM-IST": "VAR-SRM",
+    "Marla/KSU": "MAR-KSU",
+    "Yerka/YJ": "YER-YJ",
+    "Enyew/WSU": "ENY-WSU",
+    "Jura/SbMATE": "JUR-SBM",
+    "Meseret/BI": "MES-BI",
+}
+
+
+SBMATE_RE = re.compile(
+    r"^(?P<idx>\d+)Aluminum tolerance(?P<locus>SbMATE_\d+?)"
+    r"(?P<chrom>3)(?P<start>71104827)(?P<end>71108073)"
+    r"(?P<ref>[ACGT])(?P<alt>[ACGT])"
+    r"SbMATE functional marker \(PMID:24498106\)"
+    r"(?P<priority>2)Jura/SbMATESNP$"
+)
+
+
+def clean_int(value: str) -> int | None:
+    value = (value or "").replace(",", "").strip()
+    if not value or value == "-":
+        return None
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
+def clean_allele(value: str) -> str:
+    value = (value or "").strip().upper()
+    value = re.sub(r"\s*\([^)]*\)", "", value)
+    value = re.sub(r"[^A-Z0-9-]+", "", value)
+    return value if value and value != "-" else "NA"
+
+
+def source_code(source: str) -> str:
+    if source in SOURCE_CODES:
+        return SOURCE_CODES[source]
+    code = re.sub(r"[^A-Za-z0-9]+", "-", source.upper()).strip("-")
+    return code[:12] or "UNKNOWN"
+
+
+def marker_class(row: dict[str, object]) -> str:
+    marker_type = str(row.get("markerType") or "").upper()
+    evidence = str(row.get("evidence") or "").upper()
+    locus = str(row.get("locus") or "").upper()
+    if "SNP" in marker_type:
+        return "SNP"
+    if "QTL" in marker_type or "QTL" in evidence or locus.startswith("QTL"):
+        return "QTL"
+    if marker_type == "NO_COORDS":
+        return "NC"
+    return "GENE"
+
+
+def canonical_id(row: dict[str, object], fallback_serial: int) -> str:
+    cls = marker_class(row)
+    chrom = str(row.get("chrom") or "").strip()
+    start = row.get("posStart")
+    end = row.get("posEnd")
+    source = source_code(str(row.get("source") or ""))
+
+    if chrom and chrom != "-" and isinstance(start, int):
+        chrom_key = f"SB{int(chrom):02d}" if chrom.isdigit() else f"SB{chrom}"
+        start_key = f"{start:09d}"
+        if cls == "SNP":
+            ref = clean_allele(str(row.get("ref") or ""))
+            alt = clean_allele(str(row.get("alt") or ""))
+            return f"S100K-SNP-{chrom_key}-{start_key}-{ref}-{alt}"
+        if isinstance(end, int) and end != start:
+            return f"S100K-{cls}-{chrom_key}-{start_key}-{end:09d}"
+        return f"S100K-{cls}-{chrom_key}-{start_key}"
+
+    return f"S100K-{cls}-{source}-{fallback_serial:04d}"
+
+
+def add_canonical_ids(rows: list[dict[str, object]]) -> None:
+    seen: Counter[str] = Counter()
+    for serial, row in enumerate(rows, start=1):
+        base = canonical_id(row, serial)
+        seen[base] += 1
+        row["canonicalId"] = base if seen[base] == 1 else f"{base}-{seen[base]:02d}"
+        row["sourceCode"] = source_code(str(row.get("source") or ""))
+        row["originalName"] = row.get("locus", "")
+
+
+def normalized_row(raw: list[str]) -> dict[str, object] | None:
+    if len(raw) >= 12:
+        return {
+            "index": raw[0],
+            "trait": raw[1],
+            "locus": raw[2],
+            "chrom": raw[3],
+            "posStart": clean_int(raw[4]),
+            "posEnd": clean_int(raw[5]),
+            "ref": raw[6],
+            "alt": raw[7],
+            "evidence": raw[8],
+            "priority": raw[9],
+            "source": raw[10],
+            "markerType": raw[11],
+        }
+
+    match = SBMATE_RE.match(raw[0] if raw else "")
+    if not match:
+        return None
+
+    return {
+        "index": match.group("idx"),
+        "trait": "Aluminum tolerance",
+        "locus": match.group("locus"),
+        "chrom": match.group("chrom"),
+        "posStart": clean_int(match.group("start")),
+        "posEnd": clean_int(match.group("end")),
+        "ref": match.group("ref"),
+        "alt": match.group("alt"),
+        "evidence": "SbMATE functional marker (PMID:24498106)",
+        "priority": match.group("priority"),
+        "source": "Jura/SbMATE",
+        "markerType": "SNP",
+    }
+
+
+def read_catalog() -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    with (ROOT / "marker_catalog_304_corrected.tsv").open(newline="") as handle:
+        reader = csv.reader(handle, delimiter="\t")
+        next(reader)
+        for raw in reader:
+            row = normalized_row(raw)
+            if row:
+                rows.append(row)
+    add_canonical_ids(rows)
+    return rows
+
+
+def read_summary(path: str) -> list[dict[str, object]]:
+    with (ROOT / path).open(newline="") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def top_counts(rows: list[dict[str, object]], key: str, limit: int | None = None) -> list[dict[str, object]]:
+    counts = Counter(str(row.get(key) or "Unspecified") for row in rows)
+    items = [{"name": name, "count": count} for name, count in counts.most_common()]
+    return items if limit is None else items[:limit]
+
+
+def collaborator_rows(catalog: list[dict[str, object]]) -> list[dict[str, object]]:
+    counts = Counter(str(row["source"]) for row in catalog)
+    counts["Meseret/BI"] = 9115
+    result = []
+    for source, count in counts.most_common():
+        meta = COLLABORATOR_META.get(source, {})
+        result.append(
+            {
+                "source": source,
+                "collaborator": meta.get("display", source),
+                "institution": meta.get("institution", ""),
+                "focus": meta.get("focus", ""),
+                "count": count,
+                "catalogScope": "array panel" if source == "Meseret/BI" else "curated catalog",
+            }
+        )
+    return result
+
+
+def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
+    fields = [
+        "canonicalId",
+        "originalName",
+        "trait",
+        "markerType",
+        "chrom",
+        "posStart",
+        "posEnd",
+        "ref",
+        "alt",
+        "priority",
+        "source",
+        "sourceCode",
+        "evidence",
+    ]
+    with NORMALIZED_OUT.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(catalog)
+
+
+def main() -> None:
+    catalog = read_catalog()
+    write_normalized_catalog(catalog)
+    region_summary = read_summary("results/summary_region_class.tsv")
+    chromosome_annotation = read_summary("results/summary_per_chromosome.tsv")
+    dense_genes = read_summary("results/summary_per_gene.tsv")[:20]
+
+    payload = {
+        "generatedFrom": [
+            "marker_catalog_304_corrected.tsv",
+            "marker_extraction_report.md",
+            "results/summary_region_class.tsv",
+            "results/summary_per_chromosome.tsv",
+            "results/summary_per_gene.tsv",
+        ],
+        "totals": {
+            "curatedMarkers": len(catalog),
+            "arrayPanelMarkers": 9115,
+            "totalMarkers": len(catalog) + 9115,
+            "collaborators": 15,
+            "chromosomes": len({row["chrom"] for row in catalog if row.get("chrom") and row["chrom"] != "-"}),
+        },
+        "catalog": catalog,
+        "collaborators": collaborator_rows(catalog),
+        "traitCounts": top_counts(catalog, "trait"),
+        "chromosomeCounts": top_counts(catalog, "chrom"),
+        "priorityCounts": top_counts(catalog, "priority"),
+        "markerTypeCounts": top_counts(catalog, "markerType"),
+        "regionSummary": region_summary,
+        "chromosomeAnnotation": chromosome_annotation,
+        "denseGenes": dense_genes,
+    }
+
+    OUT.write_text(
+        "window.MARKER_DASHBOARD_DATA = "
+        + json.dumps(payload, indent=2, sort_keys=True)
+        + ";\n",
+        encoding="utf-8",
+    )
+
+
+if __name__ == "__main__":
+    main()
