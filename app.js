@@ -472,6 +472,7 @@ function bindFilters() {
   ].forEach(([select, key]) => {
     select.addEventListener("change", (event) => {
       state[key] = event.target.value;
+      selectedMarkerIds.clear();
       renderTable();
     });
   });
@@ -519,6 +520,10 @@ function bindFilters() {
   els.reviewerSource.addEventListener("change", () => {
     reviewer.source = els.reviewerSource.value;
     localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
+    state.source = reviewer.source;
+    els.sourceFilter.value = reviewer.source;
+    selectedMarkerIds.clear();
+    renderTable();
   });
 }
 
@@ -536,6 +541,10 @@ function init() {
   setOptions(els.reviewerSource, uniqueValues("source"));
   els.reviewerName.value = reviewer.name || "";
   els.reviewerSource.value = reviewer.source || "All";
+  if (reviewer.source && reviewer.source !== "All") {
+    state.source = reviewer.source;
+    els.sourceFilter.value = reviewer.source;
+  }
 
   bindFilters();
   renderStaticCharts();
