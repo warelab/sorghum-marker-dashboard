@@ -70,7 +70,7 @@
             <div>
               <p class="eyebrow">Feedback</p>
               <h2>Review markers</h2>
-              <p class="small-copy">Select a marker from the table, add a decision and note, then export your feedback CSV.</p>
+              <p class="small-copy">Select one or more markers from the table, apply one decision to the full selection, then export your feedback CSV.</p>
             </div>
             <div class="filter-group">
               <label for="reviewerName">Reviewer</label>
@@ -81,7 +81,7 @@
               <select id="reviewerSource"></select>
             </div>
             <div class="selected-marker" id="selectedMarker">
-              <span>No marker selected</span>
+              <span>No markers selected</span>
             </div>
             <div class="filter-group">
               <label for="feedbackDecision">Decision</label>
@@ -96,7 +96,7 @@
               <label for="feedbackComment">Comment</label>
               <textarea id="feedbackComment" placeholder="Correction, evidence, coordinate issue, trait note, or publication reference"></textarea>
             </div>
-            <button id="saveFeedback" type="button">Save feedback</button>
+            <button id="saveFeedback" type="button">Save feedback for selected markers</button>
             <button id="exportFeedback" type="button" class="secondary">Export feedback CSV</button>
             <button id="clearFeedback" type="button" class="ghost">Clear saved feedback</button>
             <p class="small-copy"><strong id="feedbackCount">0</strong> saved feedback items in this browser.</p>
@@ -128,11 +128,16 @@
                 <h2>Curated catalog</h2>
                 <p><span id="visibleCount">0</span> markers visible after filters.</p>
               </div>
+              <div class="selection-actions">
+                <button id="selectAllVisible" type="button" class="secondary">Select all visible</button>
+                <button id="clearSelection" type="button" class="ghost">Clear selection</button>
+              </div>
             </div>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
+                    <th class="checkbox-col"><input id="selectAllCheckbox" type="checkbox" aria-label="Select all visible markers" /></th>
                     <th>Standard ID</th>
                     <th>Trait</th>
                     <th>Original name</th>

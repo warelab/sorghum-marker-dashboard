@@ -6,7 +6,6 @@ const state = {
   trait: "All",
   chrom: "All",
   priority: "All",
-  selectedMarkerId: "",
 };
 
 const STORAGE_KEYS = {
@@ -27,6 +26,9 @@ const els = {
   searchInput: document.querySelector("#searchInput"),
   resetFilters: document.querySelector("#resetFilters"),
   exportCsv: document.querySelector("#exportCsv"),
+  selectAllVisible: document.querySelector("#selectAllVisible"),
+  clearSelection: document.querySelector("#clearSelection"),
+  selectAllCheckbox: document.querySelector("#selectAllCheckbox"),
   reviewerName: document.querySelector("#reviewerName"),
   reviewerSource: document.querySelector("#reviewerSource"),
   selectedMarker: document.querySelector("#selectedMarker"),
@@ -48,6 +50,7 @@ const els = {
 const format = new Intl.NumberFormat("en-US");
 let feedbackItems = loadJson(STORAGE_KEYS.feedback, []);
 let reviewer = loadJson(STORAGE_KEYS.reviewer, { name: "", source: "All" });
+const selectedMarkerIds = new Set();
 
 function uniqueValues(key) {
   return [...new Set(data.catalog.map((row) => row[key]).filter(Boolean))].sort((a, b) => {
@@ -168,10 +171,17 @@ function filteredCatalog() {
 function renderTable() {
   const rows = filteredCatalog();
   els.visibleCount.textContent = format.format(rows.length);
+  const visibleIds = rows.map((row) => row.canonicalId);
+  const visibleSelectedCount = visibleIds.filter((id) => selectedMarkerIds.has(id)).length;
+  els.selectAllCheckbox.checked = rows.length > 0 && visibleSelectedCount === rows.length;
+  els.selectAllCheckbox.indeterminate = visibleSelectedCount > 0 && visibleSelectedCount < rows.length;
   els.catalogBody.innerHTML = rows
     .map(
       (row) => `
       <tr>
+        <td class="checkbox-col">
+          <input type="checkbox" class="marker-checkbox" data-marker-id="${escapeHtml(row.canonicalId)}" ${selectedMarkerIds.has(row.canonicalId) ? "checked" : ""} aria-label="Select ${escapeHtml(row.canonicalId)}" />
+        </td>
         <td><strong>${escapeHtml(row.canonicalId)}</strong></td>
         <td>${escapeHtml(row.trait)}</td>
         <td><strong>${escapeHtml(row.locus)}</strong><br>${escapeHtml(row.markerType || "")}</td>
@@ -182,13 +192,14 @@ function renderTable() {
         <td>${escapeHtml(row.evidence)}</td>
         <td>
           <button class="row-action" type="button" data-marker-id="${escapeHtml(row.canonicalId)}">
-            ${feedbackFor(row.canonicalId) ? "Edit" : "Review"}
+            ${selectedMarkerIds.has(row.canonicalId) ? "Selected" : feedbackFor(row.canonicalId) ? "Edit" : "Review"}
           </button>
         </td>
       </tr>
     `,
     )
     .join("");
+  renderSelectionSummary();
 }
 
 function formatPosition(row) {
@@ -217,23 +228,57 @@ function exportCsv() {
   downloadCsv("filtered_sorghum_markers.csv", headers, rows);
 }
 
-function selectMarker(markerId) {
-  const marker = data.catalog.find((row) => row.canonicalId === markerId);
-  if (!marker) return;
-  state.selectedMarkerId = markerId;
-  const existing = feedbackFor(markerId);
+function renderSelectionSummary() {
+  const selectedRows = data.catalog.filter((row) => selectedMarkerIds.has(row.canonicalId));
+  if (!selectedRows.length) {
+    els.feedbackDecision.value = "confirm";
+    els.feedbackComment.value = "";
+    els.selectedMarker.innerHTML = "<span>No markers selected</span>";
+    return;
+  }
+
+  const existing = selectedRows.length === 1 ? feedbackFor(selectedRows[0].canonicalId) : null;
+  if (existing) {
+    els.feedbackDecision.value = existing.decision || "confirm";
+    els.feedbackComment.value = existing.comment || "";
+  } else {
+    els.feedbackDecision.value = "confirm";
+    els.feedbackComment.value = "";
+  }
+
+  const preview = selectedRows
+    .slice(0, 3)
+    .map((row) => row.canonicalId)
+    .join(", ");
+  const suffix = selectedRows.length > 3 ? ` + ${selectedRows.length - 3} more` : "";
   els.selectedMarker.innerHTML = `
-    <strong>${escapeHtml(marker.canonicalId)}</strong>
-    <span>${escapeHtml(marker.trait)} · ${escapeHtml(marker.locus)} · ${escapeHtml(marker.source)}</span>
+    <strong>${format.format(selectedRows.length)} markers selected</strong>
+    <span>${escapeHtml(preview + suffix)}</span>
   `;
-  els.feedbackDecision.value = existing?.decision || "confirm";
-  els.feedbackComment.value = existing?.comment || "";
-  els.feedbackComment.focus();
+}
+
+function toggleMarkerSelection(markerId) {
+  if (selectedMarkerIds.has(markerId)) {
+    selectedMarkerIds.delete(markerId);
+  } else {
+    selectedMarkerIds.add(markerId);
+  }
+  renderTable();
+}
+
+function selectAllVisibleMarkers() {
+  filteredCatalog().forEach((row) => selectedMarkerIds.add(row.canonicalId));
+  renderTable();
+}
+
+function clearSelection() {
+  selectedMarkerIds.clear();
+  renderTable();
 }
 
 function saveFeedback() {
-  if (!state.selectedMarkerId) {
-    els.selectedMarker.innerHTML = "<span>Select a marker from the table before saving feedback.</span>";
+  if (!selectedMarkerIds.size) {
+    els.selectedMarker.innerHTML = "<span>Select one or more markers from the table before saving feedback.</span>";
     return;
   }
 
@@ -243,21 +288,23 @@ function saveFeedback() {
   };
   localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
 
-  const marker = data.catalog.find((row) => row.canonicalId === state.selectedMarkerId);
-  const item = {
-    canonicalId: state.selectedMarkerId,
-    originalName: marker?.originalName || marker?.locus || "",
-    trait: marker?.trait || "",
-    source: marker?.source || "",
-    reviewerName: reviewer.name,
-    reviewerGroup: reviewer.source === "All" ? "" : reviewer.source,
-    decision: els.feedbackDecision.value,
-    comment: els.feedbackComment.value.trim(),
-    reviewedAt: new Date().toISOString(),
-  };
-
-  feedbackItems = feedbackItems.filter((entry) => entry.canonicalId !== state.selectedMarkerId);
-  feedbackItems.push(item);
+  const reviewedAt = new Date().toISOString();
+  feedbackItems = feedbackItems.filter((entry) => !selectedMarkerIds.has(entry.canonicalId));
+  data.catalog
+    .filter((row) => selectedMarkerIds.has(row.canonicalId))
+    .forEach((marker) => {
+      feedbackItems.push({
+        canonicalId: marker.canonicalId,
+        originalName: marker.originalName || marker.locus || "",
+        trait: marker.trait || "",
+        source: marker.source || "",
+        reviewerName: reviewer.name,
+        reviewerGroup: reviewer.source === "All" ? "" : reviewer.source,
+        decision: els.feedbackDecision.value,
+        comment: els.feedbackComment.value.trim(),
+        reviewedAt,
+      });
+    });
   feedbackItems.sort((a, b) => a.canonicalId.localeCompare(b.canonicalId));
   localStorage.setItem(STORAGE_KEYS.feedback, JSON.stringify(feedbackItems));
   updateFeedbackCount();
@@ -366,10 +413,25 @@ function bindFilters() {
     renderTable();
   });
   els.exportCsv.addEventListener("click", exportCsv);
+  els.selectAllVisible.addEventListener("click", selectAllVisibleMarkers);
+  els.clearSelection.addEventListener("click", clearSelection);
+  els.selectAllCheckbox.addEventListener("change", (event) => {
+    if (event.target.checked) {
+      selectAllVisibleMarkers();
+      return;
+    }
+    filteredCatalog().forEach((row) => selectedMarkerIds.delete(row.canonicalId));
+    renderTable();
+  });
   els.catalogBody.addEventListener("click", (event) => {
+    const checkbox = event.target.closest(".marker-checkbox");
+    if (checkbox) {
+      toggleMarkerSelection(checkbox.dataset.markerId);
+      return;
+    }
     const button = event.target.closest("[data-marker-id]");
     if (!button) return;
-    selectMarker(button.dataset.markerId);
+    toggleMarkerSelection(button.dataset.markerId);
   });
   els.saveFeedback.addEventListener("click", saveFeedback);
   els.exportFeedback.addEventListener("click", exportFeedbackCsv);
