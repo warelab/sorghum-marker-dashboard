@@ -253,6 +253,18 @@ button.ghost {
   line-height: 1.4;
 }
 
+.selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: start;
+}
+
+.selection-actions button {
+  min-height: 38px;
+  padding: 0 14px;
+}
+
 .analysis {
   display: grid;
   gap: 24px;
@@ -402,6 +414,20 @@ td {
   vertical-align: top;
 }
 
+.checkbox-col {
+  width: 46px;
+  min-width: 46px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
+
+.checkbox-col input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
 th {
   position: sticky;
   top: 0;
@@ -466,6 +492,10 @@ td:last-child {
   .workspace,
   .split {
     grid-template-columns: 1fr;
+  }
+
+  .selection-actions {
+    width: 100%;
   }
 
   .filters {
