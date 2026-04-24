@@ -1,6 +1,6 @@
 # Sorghum Marker Database Dashboard
 
-Open `index.html` in a browser to review collaborator marker counts, curated marker filters, chromosome distribution, priority mix, annotation summaries, and marker-level feedback.
+Open `index.html` in a browser to review collaborator marker counts, curated marker filters, chromosome distribution, annotation summaries, and marker-level feedback.
 
 ## Share with collaborators
 
@@ -26,12 +26,12 @@ Then open `http://localhost:8080`.
 ## Feedback workflow
 
 1. Ask collaborators to enter their reviewer name and group in the left feedback panel.
-2. They can filter/search the curated catalog and click `Review` on any marker row.
-3. They choose a decision, add a comment, and click `Save feedback`.
-4. Feedback is saved in their browser until they click `Export feedback CSV`.
-5. They send the exported `sorghum_marker_feedback.csv` back to you.
+2. They can filter/search the curated catalog and select one or more marker rows.
+3. They choose a decision, add an optional comment, and submit feedback.
+4. If Google Forms is configured, one response row is sent per selected marker.
+5. The dashboard also keeps a browser-local CSV backup.
 
-Because this version has no backend database, feedback is not sent automatically. That keeps the app easy to share as static files and avoids account setup for collaborators.
+Google Forms setup is documented in `GOOGLE_FORM_SETUP.md`. Until `feedback-config.js` is connected to a real form, feedback is stored locally and can be exported as `sorghum_marker_feedback.csv`.
 
 ## Refresh the data bundle
 
