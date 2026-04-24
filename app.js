@@ -13,6 +13,12 @@ const STORAGE_KEYS = {
   reviewer: "sorghum-marker-reviewer-v1",
 };
 
+const feedbackFormConfig = window.FEEDBACK_FORM_CONFIG || {
+  enabled: false,
+  formActionUrl: "",
+  entryIds: {},
+};
+
 const els = {
   totalMarkers: document.querySelector("#totalMarkers"),
   curatedMarkers: document.querySelector("#curatedMarkers"),
@@ -37,6 +43,7 @@ const els = {
   saveFeedback: document.querySelector("#saveFeedback"),
   exportFeedback: document.querySelector("#exportFeedback"),
   clearFeedback: document.querySelector("#clearFeedback"),
+  feedbackStatus: document.querySelector("#feedbackStatus"),
   feedbackCount: document.querySelector("#feedbackCount"),
   collaboratorBars: document.querySelector("#collaboratorBars"),
   traitBars: document.querySelector("#traitBars"),
@@ -276,9 +283,10 @@ function clearSelection() {
   renderTable();
 }
 
-function saveFeedback() {
+async function saveFeedback() {
   if (!selectedMarkerIds.size) {
     els.selectedMarker.innerHTML = "<span>Select one or more markers from the table before saving feedback.</span>";
+    setFeedbackStatus("Select one or more markers before submitting.", "warning");
     return;
   }
 
@@ -289,26 +297,89 @@ function saveFeedback() {
   localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
 
   const reviewedAt = new Date().toISOString();
-  feedbackItems = feedbackItems.filter((entry) => !selectedMarkerIds.has(entry.canonicalId));
-  data.catalog
+  const items = data.catalog
     .filter((row) => selectedMarkerIds.has(row.canonicalId))
-    .forEach((marker) => {
-      feedbackItems.push({
-        canonicalId: marker.canonicalId,
-        originalName: marker.originalName || marker.locus || "",
-        trait: marker.trait || "",
-        source: marker.source || "",
-        reviewerName: reviewer.name,
-        reviewerGroup: reviewer.source === "All" ? "" : reviewer.source,
-        decision: els.feedbackDecision.value,
-        comment: els.feedbackComment.value.trim(),
-        reviewedAt,
-      });
-    });
-  feedbackItems.sort((a, b) => a.canonicalId.localeCompare(b.canonicalId));
-  localStorage.setItem(STORAGE_KEYS.feedback, JSON.stringify(feedbackItems));
+    .map((marker) => createFeedbackItem(marker, reviewedAt));
+
+  saveFeedbackItemsLocally(items);
   updateFeedbackCount();
   renderTable();
+
+  if (!isFeedbackFormConfigured()) {
+    setFeedbackStatus(`Saved ${format.format(items.length)} markers locally. Export CSV backup.`, "warning");
+    return;
+  }
+
+  els.saveFeedback.disabled = true;
+  setFeedbackStatus(`Submitting ${format.format(items.length)} markers.`, "pending");
+  try {
+    await submitFeedbackItemsToGoogleForm(items);
+    setFeedbackStatus(`Submitted ${format.format(items.length)} markers.`, "success");
+  } catch (error) {
+    setFeedbackStatus("Submission failed; export CSV backup.", "error");
+  } finally {
+    els.saveFeedback.disabled = false;
+  }
+}
+
+function createFeedbackItem(marker, reviewedAt) {
+  return {
+    canonicalId: marker.canonicalId,
+    originalName: marker.originalName || marker.locus || "",
+    trait: marker.trait || "",
+    source: marker.source || "",
+    reviewerName: reviewer.name,
+    reviewerGroup: reviewer.source === "All" ? "" : reviewer.source,
+    decision: els.feedbackDecision.value,
+    comment: els.feedbackComment.value.trim(),
+    reviewedAt,
+  };
+}
+
+function saveFeedbackItemsLocally(items) {
+  const itemIds = new Set(items.map((item) => item.canonicalId));
+  feedbackItems = feedbackItems.filter((entry) => !itemIds.has(entry.canonicalId));
+  feedbackItems.push(...items);
+  feedbackItems.sort((a, b) => a.canonicalId.localeCompare(b.canonicalId));
+  localStorage.setItem(STORAGE_KEYS.feedback, JSON.stringify(feedbackItems));
+}
+
+function isFeedbackFormConfigured() {
+  if (!feedbackFormConfig.enabled) return false;
+  if (!feedbackFormConfig.formActionUrl || feedbackFormConfig.formActionUrl.includes("FORM_ID")) return false;
+  const requiredFields = [
+    "canonicalId",
+    "originalName",
+    "trait",
+    "source",
+    "reviewerName",
+    "reviewerGroup",
+    "decision",
+    "comment",
+    "reviewedAt",
+  ];
+  return requiredFields.every((field) => {
+    const entryId = feedbackFormConfig.entryIds?.[field] || "";
+    return /^entry\.\d+$/.test(entryId) && !entryId.match(/^entry\.(\d)\1+$/);
+  });
+}
+
+async function submitFeedbackItemsToGoogleForm(items) {
+  for (const item of items) {
+    await submitFeedbackItemToGoogleForm(item);
+  }
+}
+
+async function submitFeedbackItemToGoogleForm(item) {
+  const formData = new FormData();
+  Object.entries(feedbackFormConfig.entryIds).forEach(([field, entryId]) => {
+    formData.append(entryId, item[field] || "");
+  });
+  await fetch(feedbackFormConfig.formActionUrl, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData,
+  });
 }
 
 function exportFeedbackCsv() {
@@ -342,6 +413,11 @@ function feedbackFor(markerId) {
 
 function updateFeedbackCount() {
   els.feedbackCount.textContent = format.format(feedbackItems.length);
+}
+
+function setFeedbackStatus(message, status = "ready") {
+  els.feedbackStatus.textContent = message;
+  els.feedbackStatus.dataset.status = status;
 }
 
 function loadJson(key, fallback) {
@@ -464,6 +540,7 @@ function init() {
   bindFilters();
   renderStaticCharts();
   updateFeedbackCount();
+  setFeedbackStatus(isFeedbackFormConfigured() ? "Ready to submit." : "Form not connected; CSV backup enabled.", isFeedbackFormConfigured() ? "ready" : "warning");
   renderTable();
 }
 

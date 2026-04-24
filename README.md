@@ -13,26 +13,29 @@ https://warelab.github.io/sorghum-marker-dashboard/
 - Review collaborator marker counts and trait coverage.
 - Search and filter curated markers by source, trait, chromosome, priority, standard ID, and original marker name.
 - Review marker-level details and standardized marker IDs.
-- Add browser-local feedback for individual markers.
-- Export `sorghum_marker_feedback.csv` and send it back to the project team.
+- Select one or more markers and submit one feedback row per marker.
+- Send feedback to a linked Google Form when configured.
+- Export `sorghum_marker_feedback.csv` as a backup.
 
 ## Feedback workflow
 
 1. Enter reviewer name and group in the feedback panel.
 2. Filter/search the curated catalog.
-3. Click `Review` on any marker row.
-4. Choose a decision and add a comment.
-5. Click `Save feedback`.
-6. Click `Export feedback CSV` and return the exported CSV.
+3. Select one marker, several markers, or all visible markers.
+4. Choose a decision and add an optional comment.
+5. Submit feedback for the selected markers.
+6. Use `Export feedback CSV` as a backup if needed.
 
-Feedback is saved only in the reviewer browser until exported. This app has no backend database and does not automatically transmit feedback.
+When `feedback-config.js` is connected to a real Google Form, each selected marker is submitted as one Google Sheet response row. Until then, feedback is saved locally in the reviewer browser.
 
 ## Files
 
 - `index.html` - app shell
 - `styles.css` - dashboard styles
 - `app.js` - filtering, table, export, and feedback behavior
+- `feedback-config.js` - Google Form endpoint and field mapping
 - `data.js` - generated marker dashboard data
+- `GOOGLE_FORM_SETUP.md` - Google Form setup instructions
 - `normalized_marker_catalog.tsv` - canonical ID mapping for curated markers
 - `marker_nomenclature.md` - standard marker naming rules
 
@@ -46,6 +49,8 @@ Minimum files to update:
 index.html
 styles.css
 app.js
+feedback-config.js
+GOOGLE_FORM_SETUP.md
 data.js
 normalized_marker_catalog.tsv
 marker_nomenclature.md
