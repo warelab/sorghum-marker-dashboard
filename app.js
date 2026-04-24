@@ -1,8 +1,9 @@
 const data = window.MARKER_DASHBOARD_DATA;
 
 const state = {
+  activeTab: "summary",
+  selectedGroup: "",
   search: "",
-  source: "All",
   trait: "All",
   chrom: "All",
   priority: "All",
@@ -25,7 +26,14 @@ const els = {
   arrayPanelMarkers: document.querySelector("#arrayPanelMarkers"),
   collaborators: document.querySelector("#collaborators"),
   dataSourceCount: document.querySelector("#dataSourceCount"),
-  sourceFilter: document.querySelector("#sourceFilter"),
+  tabButtons: document.querySelectorAll("[data-tab]"),
+  tabPanels: document.querySelectorAll("[data-panel]"),
+  groupCards: document.querySelector("#groupCards"),
+  chooseGroupCards: document.querySelector("#chooseGroupCards"),
+  selectedGroupBanner: document.querySelector("#selectedGroupBanner"),
+  reviewGate: document.querySelector("#reviewGate"),
+  reviewWorkspace: document.querySelector("#reviewWorkspace"),
+  reviewGroupHeader: document.querySelector("#reviewGroupHeader"),
   traitFilter: document.querySelector("#traitFilter"),
   chromFilter: document.querySelector("#chromFilter"),
   priorityFilter: document.querySelector("#priorityFilter"),
@@ -35,6 +43,7 @@ const els = {
   selectAllVisible: document.querySelector("#selectAllVisible"),
   clearSelection: document.querySelector("#clearSelection"),
   selectAllCheckbox: document.querySelector("#selectAllCheckbox"),
+  selectedCount: document.querySelector("#selectedCount"),
   reviewerName: document.querySelector("#reviewerName"),
   reviewerSource: document.querySelector("#reviewerSource"),
   selectedMarker: document.querySelector("#selectedMarker"),
@@ -45,11 +54,8 @@ const els = {
   clearFeedback: document.querySelector("#clearFeedback"),
   feedbackStatus: document.querySelector("#feedbackStatus"),
   feedbackCount: document.querySelector("#feedbackCount"),
-  collaboratorBars: document.querySelector("#collaboratorBars"),
   traitBars: document.querySelector("#traitBars"),
   chromosomeBars: document.querySelector("#chromosomeBars"),
-  regionBars: document.querySelector("#regionBars"),
-  denseGenes: document.querySelector("#denseGenes"),
   catalogBody: document.querySelector("#catalogBody"),
   visibleCount: document.querySelector("#visibleCount"),
 };
@@ -78,6 +84,45 @@ function setOptions(select, values, label = "All") {
   });
 }
 
+function setGroupOptions(select, values) {
+  select.innerHTML = "";
+  const placeholder = document.createElement("option");
+  placeholder.value = "All";
+  placeholder.textContent = "Choose group";
+  select.appendChild(placeholder);
+  values.forEach((value) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+}
+
+function groupRows() {
+  const bySource = new Map();
+  data.catalog.forEach((row) => {
+    if (!bySource.has(row.source)) bySource.set(row.source, []);
+    bySource.get(row.source).push(row);
+  });
+
+  return data.collaborators
+    .map((collaborator) => {
+      const source = collaborator.source || collaborator.collaborator;
+      const rows = bySource.get(source) || [];
+      return {
+        collaborator: collaborator.collaborator || source,
+        source,
+        count: Number(collaborator.count || rows.length || 0),
+        reviewable: rows.length,
+        focus: collaborator.focus || "Marker review",
+        catalogScope: collaborator.catalogScope || "Curated catalog",
+        reviewed: rows.filter((row) => feedbackFor(row.canonicalId)).length,
+      };
+    })
+    .filter((row) => row.source)
+    .sort((a, b) => b.count - a.count || a.source.localeCompare(b.source));
+}
+
 function barList(target, rows, options = {}) {
   const max = Math.max(...rows.map((row) => row.count), 1);
   target.innerHTML = rows
@@ -97,31 +142,13 @@ function barList(target, rows, options = {}) {
 
 function renderStaticCharts() {
   barList(
-    els.collaboratorBars,
-    data.collaborators.map((row) => ({
-      name: row.collaborator,
-      count: row.count,
-      meta: `${row.source} · ${row.catalogScope} · ${row.focus}`,
-    })),
-  );
-
-  barList(
     els.traitBars,
     data.traitCounts.slice(0, 12).map((row) => ({
       name: row.name,
       count: row.count,
     })),
   );
-
-  const regionRows = data.regionSummary.map((row) => ({
-    name: row.region_class,
-    count: Number(row.n_markers || 0),
-    meta: `${Math.round(Number(row.fraction_of_total || 0) * 100)}% of annotated markers`,
-  }));
-  barList(els.regionBars, regionRows);
-
   renderChromosomes();
-  renderDenseGenes();
 }
 
 function renderChromosomes() {
@@ -131,7 +158,7 @@ function renderChromosomes() {
   const max = Math.max(...rows.map((row) => row.count), 1);
   els.chromosomeBars.innerHTML = rows
     .map((row) => {
-      const height = Math.max((row.count / max) * 190, 8);
+      const height = Math.max((row.count / max) * 170, 8);
       return `
         <div class="chromosome">
           <strong>${format.format(row.count)}</strong>
@@ -143,27 +170,75 @@ function renderChromosomes() {
     .join("");
 }
 
-function renderDenseGenes() {
-  els.denseGenes.innerHTML = data.denseGenes
-    .slice(0, 8)
-    .map(
-      (row) => `
-      <div class="gene">
-        <div>
-          <strong>${escapeHtml(row.gene_name || row.gene_id)}</strong>
-          <span>Chr ${escapeHtml(row.chrom)} · ${escapeHtml(row.total_markers)} markers</span>
-        </div>
-        <strong>${Number(row.marker_density_per_kb).toFixed(2)}/kb</strong>
+function renderGroupCards() {
+  const rows = groupRows();
+  els.groupCards.innerHTML = rows.map((row) => groupCardTemplate(row, false)).join("");
+  els.chooseGroupCards.innerHTML = rows.map((row) => groupCardTemplate(row, true)).join("");
+  renderSelectedGroupBanner();
+}
+
+function groupCardTemplate(row, selectable) {
+  const isSelected = row.source === state.selectedGroup;
+  const progress = row.reviewable ? Math.round((row.reviewed / row.reviewable) * 100) : 0;
+  const reviewAction = row.reviewable
+    ? `<button type="button" class="group-select${selectable ? "" : " secondary"}" data-group="${escapeHtml(row.source)}">${isSelected ? "Selected" : selectable ? "Review this group" : "Open group"}</button>`
+    : `<button type="button" class="group-select secondary" disabled>Summary only</button>`;
+  const reviewableStat =
+    row.reviewable === row.count
+      ? ""
+      : `
+        <strong>${format.format(row.reviewable)}</strong>
+        <span>review rows</span>
+      `;
+  return `
+    <article class="group-card${isSelected ? " selected" : ""}">
+      <div>
+        <p class="eyebrow">${escapeHtml(row.catalogScope)}</p>
+        <h3>${escapeHtml(row.source)}</h3>
+        <p>${escapeHtml(row.focus)}</p>
       </div>
-    `,
-    )
-    .join("");
+      <div class="group-stats">
+        <strong>${format.format(row.count)}</strong>
+        <span>markers</span>
+        ${reviewableStat}
+        <strong>${format.format(row.reviewed)}</strong>
+        <span>reviewed locally</span>
+      </div>
+      <div class="progress-line" aria-label="${progress}% reviewed locally"><span style="--w: ${progress}%"></span></div>
+      ${reviewAction}
+    </article>
+  `;
+}
+
+function renderSelectedGroupBanner() {
+  if (!state.selectedGroup) {
+    els.selectedGroupBanner.innerHTML = `
+      <p class="eyebrow">Current group</p>
+      <strong>No group selected</strong>
+      <span>Pick a group below to unlock the review table.</span>
+    `;
+    return;
+  }
+
+  const rows = catalogForSelectedGroup(false);
+  const reviewed = rows.filter((row) => feedbackFor(row.canonicalId)).length;
+  els.selectedGroupBanner.innerHTML = `
+    <p class="eyebrow">Current group</p>
+    <strong>${escapeHtml(state.selectedGroup)}</strong>
+    <span>${format.format(rows.length)} markers, ${format.format(reviewed)} reviewed locally.</span>
+  `;
 }
 
 function filteredCatalog() {
+  return catalogForSelectedGroup(true);
+}
+
+function catalogForSelectedGroup(applyFilters) {
+  if (!state.selectedGroup) return [];
   const query = state.search.trim().toLowerCase();
   return data.catalog.filter((row) => {
-    if (state.source !== "All" && row.source !== state.source) return false;
+    if (row.source !== state.selectedGroup) return false;
+    if (!applyFilters) return true;
     if (state.trait !== "All" && row.trait !== state.trait) return false;
     if (state.chrom !== "All" && row.chrom !== state.chrom) return false;
     if (state.priority !== "All" && row.priority !== state.priority) return false;
@@ -175,38 +250,92 @@ function filteredCatalog() {
   });
 }
 
+function renderReviewHeader() {
+  if (!state.selectedGroup) {
+    els.reviewGate.hidden = false;
+    els.reviewWorkspace.hidden = true;
+    return;
+  }
+
+  const rows = catalogForSelectedGroup(false);
+  const reviewed = rows.filter((row) => feedbackFor(row.canonicalId)).length;
+  els.reviewGate.hidden = true;
+  els.reviewWorkspace.hidden = false;
+  els.reviewGroupHeader.innerHTML = `
+    <div>
+      <p class="eyebrow">Reviewing group</p>
+      <h2>${escapeHtml(state.selectedGroup)}</h2>
+      <p>${format.format(rows.length)} total markers. ${format.format(reviewed)} have feedback saved in this browser.</p>
+    </div>
+    <button class="secondary jump-tab" type="button" data-tab="choose">Switch group</button>
+  `;
+}
+
 function renderTable() {
+  renderReviewHeader();
   const rows = filteredCatalog();
   els.visibleCount.textContent = format.format(rows.length);
   const visibleIds = rows.map((row) => row.canonicalId);
   const visibleSelectedCount = visibleIds.filter((id) => selectedMarkerIds.has(id)).length;
+  els.selectedCount.textContent = `${format.format(selectedMarkerIds.size)} selected`;
   els.selectAllCheckbox.checked = rows.length > 0 && visibleSelectedCount === rows.length;
   els.selectAllCheckbox.indeterminate = visibleSelectedCount > 0 && visibleSelectedCount < rows.length;
-  els.catalogBody.innerHTML = rows
-    .map(
-      (row) => `
+
+  if (!state.selectedGroup) {
+    els.catalogBody.innerHTML = "";
+    renderSelectionSummary();
+    return;
+  }
+
+  if (!rows.length) {
+    els.catalogBody.innerHTML = `
       <tr>
-        <td class="checkbox-col">
-          <input type="checkbox" class="marker-checkbox" data-marker-id="${escapeHtml(row.canonicalId)}" ${selectedMarkerIds.has(row.canonicalId) ? "checked" : ""} aria-label="Select ${escapeHtml(row.canonicalId)}" />
-        </td>
-        <td><strong>${escapeHtml(row.canonicalId)}</strong></td>
-        <td>${escapeHtml(row.trait)}</td>
-        <td><strong>${escapeHtml(row.locus)}</strong><br>${escapeHtml(row.markerType || "")}</td>
-        <td>${escapeHtml(row.chrom)}</td>
-        <td>${formatPosition(row)}</td>
-        <td>${row.priority ? `P${escapeHtml(row.priority)}` : ""}</td>
-        <td>${escapeHtml(row.source)}</td>
-        <td>${escapeHtml(row.evidence)}</td>
-        <td>
-          <button class="row-action" type="button" data-marker-id="${escapeHtml(row.canonicalId)}">
-            ${selectedMarkerIds.has(row.canonicalId) ? "Selected" : feedbackFor(row.canonicalId) ? "Edit" : "Review"}
-          </button>
-        </td>
+        <td colspan="9" class="empty-table">No markers match the current search and filters.</td>
       </tr>
-    `,
-    )
+    `;
+    renderSelectionSummary();
+    return;
+  }
+
+  els.catalogBody.innerHTML = rows
+    .map((row) => {
+      const feedback = feedbackFor(row.canonicalId);
+      const status = feedback
+        ? `<span class="status-pill reviewed">${escapeHtml(decisionLabel(feedback.decision))}</span>`
+        : `<span class="status-pill">Not reviewed</span>`;
+      return `
+        <tr>
+          <td class="checkbox-col">
+            <input type="checkbox" class="marker-checkbox" data-marker-id="${escapeHtml(row.canonicalId)}" ${selectedMarkerIds.has(row.canonicalId) ? "checked" : ""} aria-label="Select ${escapeHtml(row.canonicalId)}" />
+          </td>
+          <td><strong>${escapeHtml(row.canonicalId)}</strong></td>
+          <td>${escapeHtml(row.trait)}</td>
+          <td><strong>${escapeHtml(row.locus)}</strong><br>${escapeHtml(row.markerType || "")}</td>
+          <td>${escapeHtml(row.chrom)}</td>
+          <td>${formatPosition(row)}</td>
+          <td>${row.priority ? `P${escapeHtml(row.priority)}` : ""}</td>
+          <td>${escapeHtml(row.evidence)}</td>
+          <td>
+            <button class="row-action" type="button" data-marker-id="${escapeHtml(row.canonicalId)}">
+              ${selectedMarkerIds.has(row.canonicalId) ? "Selected" : "Select"}
+            </button>
+            ${status}
+          </td>
+        </tr>
+      `;
+    })
     .join("");
   renderSelectionSummary();
+}
+
+function decisionLabel(value) {
+  const labels = {
+    confirm: "Confirmed",
+    revise: "Revise",
+    remove: "Remove",
+    question: "Question",
+  };
+  return labels[value] || "Reviewed";
 }
 
 function formatPosition(row) {
@@ -237,6 +366,7 @@ function exportCsv() {
 
 function renderSelectionSummary() {
   const selectedRows = data.catalog.filter((row) => selectedMarkerIds.has(row.canonicalId));
+  els.selectedCount.textContent = `${format.format(selectedRows.length)} selected`;
   if (!selectedRows.length) {
     els.feedbackDecision.value = "confirm";
     els.feedbackComment.value = "";
@@ -254,10 +384,10 @@ function renderSelectionSummary() {
   }
 
   const preview = selectedRows
-    .slice(0, 3)
+    .slice(0, 5)
     .map((row) => row.canonicalId)
     .join(", ");
-  const suffix = selectedRows.length > 3 ? ` + ${selectedRows.length - 3} more` : "";
+  const suffix = selectedRows.length > 5 ? ` + ${selectedRows.length - 5} more` : "";
   els.selectedMarker.innerHTML = `
     <strong>${format.format(selectedRows.length)} markers selected</strong>
     <span>${escapeHtml(preview + suffix)}</span>
@@ -285,14 +415,15 @@ function clearSelection() {
 
 async function saveFeedback() {
   if (!selectedMarkerIds.size) {
-    els.selectedMarker.innerHTML = "<span>Select one or more markers from the table before saving feedback.</span>";
+    els.selectedMarker.innerHTML = "<span>Select one or more markers before submitting feedback.</span>";
     setFeedbackStatus("Select one or more markers before submitting.", "warning");
+    switchTab("review");
     return;
   }
 
   reviewer = {
     name: els.reviewerName.value.trim(),
-    source: els.reviewerSource.value,
+    source: state.selectedGroup || els.reviewerSource.value,
   };
   localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
 
@@ -303,9 +434,12 @@ async function saveFeedback() {
 
   saveFeedbackItemsLocally(items);
   updateFeedbackCount();
+  renderGroupCards();
   renderTable();
 
   if (!isFeedbackFormConfigured()) {
+    selectedMarkerIds.clear();
+    renderAll();
     setFeedbackStatus(`Saved ${format.format(items.length)} markers locally. Export CSV backup.`, "warning");
     return;
   }
@@ -314,8 +448,12 @@ async function saveFeedback() {
   setFeedbackStatus(`Submitting ${format.format(items.length)} markers.`, "pending");
   try {
     await submitFeedbackItemsToGoogleForm(items);
+    selectedMarkerIds.clear();
+    renderAll();
     setFeedbackStatus(`Submitted ${format.format(items.length)} markers.`, "success");
   } catch (error) {
+    selectedMarkerIds.clear();
+    renderAll();
     setFeedbackStatus("Submission failed; export CSV backup.", "error");
   } finally {
     els.saveFeedback.disabled = false;
@@ -404,7 +542,7 @@ function clearFeedback() {
   feedbackItems = [];
   localStorage.removeItem(STORAGE_KEYS.feedback);
   updateFeedbackCount();
-  renderTable();
+  renderAll();
 }
 
 function feedbackFor(markerId) {
@@ -418,6 +556,50 @@ function updateFeedbackCount() {
 function setFeedbackStatus(message, status = "ready") {
   els.feedbackStatus.textContent = message;
   els.feedbackStatus.dataset.status = status;
+}
+
+function selectGroup(source) {
+  if (!source || source === "All") {
+    state.selectedGroup = "";
+    reviewer.source = "All";
+  } else {
+    state.selectedGroup = source;
+    reviewer.source = source;
+  }
+  selectedMarkerIds.clear();
+  resetMarkerFilters(false);
+  els.reviewerSource.value = reviewer.source;
+  localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
+  switchTab(state.selectedGroup ? "review" : "choose");
+  renderAll();
+}
+
+function switchTab(tab) {
+  state.activeTab = tab;
+  document.querySelectorAll(".tab-button").forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tab);
+  });
+  els.tabPanels.forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.panel === tab);
+  });
+}
+
+function resetMarkerFilters(render = true) {
+  state.search = "";
+  state.trait = "All";
+  state.chrom = "All";
+  state.priority = "All";
+  els.searchInput.value = "";
+  els.traitFilter.value = "All";
+  els.chromFilter.value = "All";
+  els.priorityFilter.value = "All";
+  if (render) renderTable();
+}
+
+function renderAll() {
+  renderGroupCards();
+  renderTable();
+  renderSelectionSummary();
 }
 
 function loadJson(key, fallback) {
@@ -459,13 +641,26 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function bindFilters() {
+function bindEvents() {
+  document.addEventListener("click", (event) => {
+    const tabButton = event.target.closest("[data-tab]");
+    if (tabButton) {
+      switchTab(tabButton.dataset.tab);
+      return;
+    }
+    const groupButton = event.target.closest("[data-group]");
+    if (groupButton) {
+      selectGroup(groupButton.dataset.group);
+    }
+  });
+
   els.searchInput.addEventListener("input", (event) => {
     state.search = event.target.value;
+    selectedMarkerIds.clear();
     renderTable();
   });
+
   [
-    [els.sourceFilter, "source"],
     [els.traitFilter, "trait"],
     [els.chromFilter, "chrom"],
     [els.priorityFilter, "priority"],
@@ -476,19 +671,8 @@ function bindFilters() {
       renderTable();
     });
   });
-  els.resetFilters.addEventListener("click", () => {
-    state.search = "";
-    state.source = "All";
-    state.trait = "All";
-    state.chrom = "All";
-    state.priority = "All";
-    els.searchInput.value = "";
-    els.sourceFilter.value = "All";
-    els.traitFilter.value = "All";
-    els.chromFilter.value = "All";
-    els.priorityFilter.value = "All";
-    renderTable();
-  });
+
+  els.resetFilters.addEventListener("click", () => resetMarkerFilters(true));
   els.exportCsv.addEventListener("click", exportCsv);
   els.selectAllVisible.addEventListener("click", selectAllVisibleMarkers);
   els.clearSelection.addEventListener("click", clearSelection);
@@ -518,12 +702,7 @@ function bindFilters() {
     localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
   });
   els.reviewerSource.addEventListener("change", () => {
-    reviewer.source = els.reviewerSource.value;
-    localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
-    state.source = reviewer.source;
-    els.sourceFilter.value = reviewer.source;
-    selectedMarkerIds.clear();
-    renderTable();
+    selectGroup(els.reviewerSource.value);
   });
 }
 
@@ -534,23 +713,29 @@ function init() {
   els.collaborators.textContent = format.format(data.totals.collaborators);
   els.dataSourceCount.textContent = `${data.generatedFrom.length} sources`;
 
-  setOptions(els.sourceFilter, uniqueValues("source"));
+  const sources = uniqueValues("source");
   setOptions(els.traitFilter, uniqueValues("trait"));
   setOptions(els.chromFilter, uniqueValues("chrom"));
   setOptions(els.priorityFilter, uniqueValues("priority"));
-  setOptions(els.reviewerSource, uniqueValues("source"));
+  setGroupOptions(els.reviewerSource, sources);
   els.reviewerName.value = reviewer.name || "";
-  els.reviewerSource.value = reviewer.source || "All";
-  if (reviewer.source && reviewer.source !== "All") {
-    state.source = reviewer.source;
-    els.sourceFilter.value = reviewer.source;
+  if (reviewer.source && reviewer.source !== "All" && sources.includes(reviewer.source)) {
+    state.selectedGroup = reviewer.source;
+    els.reviewerSource.value = reviewer.source;
+  } else {
+    reviewer.source = "All";
+    els.reviewerSource.value = "All";
   }
 
-  bindFilters();
+  bindEvents();
   renderStaticCharts();
   updateFeedbackCount();
-  setFeedbackStatus(isFeedbackFormConfigured() ? "Ready to submit." : "Form not connected; CSV backup enabled.", isFeedbackFormConfigured() ? "ready" : "warning");
-  renderTable();
+  setFeedbackStatus(
+    isFeedbackFormConfigured() ? "Ready to submit." : "Form not connected; CSV backup enabled.",
+    isFeedbackFormConfigured() ? "ready" : "warning",
+  );
+  switchTab("summary");
+  renderAll();
 }
 
 init();
