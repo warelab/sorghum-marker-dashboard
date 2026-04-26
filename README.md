@@ -19,8 +19,10 @@ https://warelab.github.io/sorghum-marker-dashboard/
 
 ## Feedback workflow
 
-1. Enter reviewer name and group in the feedback panel.
-2. Filter/search the curated catalog.
+Share [`CURATOR_REVIEW_INSTRUCTIONS.md`](CURATOR_REVIEW_INSTRUCTIONS.md) with curators for step-by-step marker validation instructions.
+
+1. Choose a curator group from the `Group` dropdown.
+2. Search/filter the review queue and inspect markers in the current-marker panel.
 3. Select one marker, several markers, or all visible markers.
 4. Choose a decision and add an optional comment.
 5. Submit feedback for the selected markers.
@@ -36,6 +38,7 @@ When `feedback-config.js` is connected to a real Google Form, each selected mark
 - `feedback-config.js` - Google Form endpoint and field mapping
 - `data.js` - generated marker dashboard data
 - `GOOGLE_FORM_SETUP.md` - Google Form setup instructions
+- `CURATOR_REVIEW_INSTRUCTIONS.md` - curator-facing marker validation instructions
 - `normalized_marker_catalog.tsv` - canonical ID mapping for curated markers
 - `marker_nomenclature.md` - standard marker naming rules
 
