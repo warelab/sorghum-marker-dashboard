@@ -8,15 +8,15 @@
   </head>
   <body>
     <main class="shell">
-      <header class="topbar">
+      <header class="app-header">
         <div>
           <p class="eyebrow">Sorghum 100K marker panel</p>
-          <h1>Marker review dashboard</h1>
-          <p class="dek">Review collaborator marker sets, select markers, and submit curator feedback to the shared response sheet.</p>
+          <h1>Marker review queue</h1>
+          <p class="dek">Choose a curator group, review markers from the queue, and submit feedback to the shared Google response sheet.</p>
         </div>
-        <div class="source-note">
-          <span>Data bundle</span>
-          <strong id="dataSourceCount">0 sources</strong>
+        <div class="header-actions">
+          <button id="exportCsv" type="button" class="secondary">Export visible markers CSV</button>
+          <button id="exportFeedback" type="button" class="secondary">Export feedback CSV</button>
         </div>
       </header>
 
@@ -37,89 +37,62 @@
           <span>Collaborators</span>
           <strong id="collaborators">0</strong>
         </div>
+        <div class="metric">
+          <span>Data bundle</span>
+          <strong id="dataSourceCount">0 sources</strong>
+        </div>
       </section>
 
-      <nav class="tabs" aria-label="Curator workflow">
-        <button class="tab-button active" type="button" data-tab="summary">1. Summary</button>
-        <button class="tab-button" type="button" data-tab="choose">2. Choose Group</button>
-        <button class="tab-button" type="button" data-tab="review">3. Review Markers</button>
-        <button class="tab-button" type="button" data-tab="submit">4. Submit Feedback</button>
-      </nav>
-
-      <section class="tab-panel active" id="summaryPanel" data-panel="summary" aria-label="Marker collection summary">
-        <div class="section-heading">
+      <section class="review-shell" aria-label="Marker review workspace">
+        <aside class="filters-panel" aria-label="Review filters">
           <div>
-            <p class="eyebrow">Collection overview</p>
-            <h2>Start with the full marker collection</h2>
-            <p>Counts summarize the curated catalog and collaborator coverage. Choose a group when you are ready to review.</p>
+            <p class="eyebrow">Filters</p>
+            <h2>Choose markers</h2>
           </div>
-          <button class="secondary jump-tab" type="button" data-tab="choose">Choose a group</button>
-        </div>
-        <div id="groupCards" class="group-grid"></div>
-        <div class="summary-grid">
-          <section>
-            <h2>Top trait categories</h2>
-            <div id="traitBars" class="bar-list compact"></div>
-          </section>
-          <section>
-            <h2>Chromosome distribution</h2>
-            <div id="chromosomeBars" class="chromosome-bars"></div>
-          </section>
-        </div>
-      </section>
-
-      <section class="tab-panel" id="choosePanel" data-panel="choose" aria-label="Choose collaborator group">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Group selection</p>
-            <h2>Pick one group to review</h2>
-            <p>The review table only loads markers from the selected group. You can switch groups at any time.</p>
+          <div class="filter-group">
+            <label for="reviewerSource">Group</label>
+            <select id="reviewerSource"></select>
           </div>
-          <button class="secondary jump-tab" type="button" data-tab="review">Go to review</button>
-        </div>
-        <div id="selectedGroupBanner" class="selected-group-banner"></div>
-        <div id="chooseGroupCards" class="group-grid selectable"></div>
-      </section>
-
-      <section class="tab-panel" id="reviewPanel" data-panel="review" aria-label="Review markers">
-        <div id="reviewGate" class="empty-state">
-          <p class="eyebrow">Choose group first</p>
-          <h2>No group selected</h2>
-          <p>Select a collaborator group before reviewing markers.</p>
-          <button type="button" class="jump-tab" data-tab="choose">Choose group</button>
-        </div>
-
-        <div id="reviewWorkspace" class="review-workspace">
-          <div class="review-header" id="reviewGroupHeader"></div>
-          <div class="filter-panel" aria-label="Marker filters">
-            <div class="filter-group search-field">
-              <label for="searchInput">Search within group</label>
-              <input id="searchInput" type="search" placeholder="Trait, marker ID, locus, evidence" />
-            </div>
-            <div class="filter-group">
-              <label for="traitFilter">Trait</label>
-              <select id="traitFilter"></select>
-            </div>
-            <div class="filter-group">
-              <label for="chromFilter">Chr</label>
-              <select id="chromFilter"></select>
-            </div>
-            <div class="filter-group">
-              <label for="priorityFilter">Priority</label>
-              <select id="priorityFilter"></select>
-            </div>
-            <button id="resetFilters" type="button" class="secondary">Reset filters</button>
+          <div class="filter-group">
+            <label for="traitFilter">Trait</label>
+            <select id="traitFilter"></select>
           </div>
+          <div class="filter-group">
+            <label for="chromFilter">Chromosome</label>
+            <select id="chromFilter"></select>
+          </div>
+          <div class="filter-group">
+            <label for="priorityFilter">Priority</label>
+            <select id="priorityFilter"></select>
+          </div>
+          <button id="resetFilters" type="button" class="ghost">Reset filters</button>
+          <div class="filter-note" id="selectedGroupBanner">
+            <strong>No group selected</strong>
+            <span>Pick a group to load the review queue.</span>
+          </div>
+        </aside>
 
-          <div class="review-actions">
+        <section class="queue-panel" aria-label="Review queue">
+          <div class="queue-header">
             <div>
-              <strong><span id="visibleCount">0</span> markers visible</strong>
-              <span id="selectedCount">0 selected</span>
+              <p class="eyebrow">Review queue</p>
+              <h2 id="queueTitle">Pick a group to begin</h2>
+              <p><span id="visibleCount">0</span> markers visible. <span id="selectedCount">0 selected</span>.</p>
             </div>
-            <div class="selection-actions">
+            <div class="queue-actions">
               <button id="selectAllVisible" type="button" class="secondary">Select all visible</button>
               <button id="clearSelection" type="button" class="ghost">Clear selection</button>
-              <button class="jump-tab" type="button" data-tab="submit">Submit selected</button>
+            </div>
+          </div>
+
+          <div class="marker-picker">
+            <div class="filter-group search-field">
+              <label for="searchInput">Search queue</label>
+              <input id="searchInput" type="search" placeholder="Search marker ID, trait, locus, evidence" />
+            </div>
+            <div class="filter-group">
+              <label for="markerSelect">Marker dropdown</label>
+              <select id="markerSelect"></select>
             </div>
           </div>
 
@@ -128,67 +101,51 @@
               <thead>
                 <tr>
                   <th class="checkbox-col"><input id="selectAllCheckbox" type="checkbox" aria-label="Select all visible markers" /></th>
-                  <th>Standard ID</th>
+                  <th>Marker ID</th>
                   <th>Trait</th>
-                  <th>Original name</th>
                   <th>Chr</th>
-                  <th>Position</th>
                   <th>Priority</th>
-                  <th>Evidence</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody id="catalogBody"></tbody>
             </table>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="tab-panel" id="submitPanel" data-panel="submit" aria-label="Submit feedback">
-        <div class="submit-grid">
-          <section class="submit-summary">
-            <p class="eyebrow">Selected markers</p>
-            <h2>Submit one decision for the current selection</h2>
-            <div class="selected-marker" id="selectedMarker">
-              <span>No markers selected</span>
-            </div>
-            <p class="small-copy">Google Forms receives one response row per selected marker. The browser also keeps a local CSV backup.</p>
-          </section>
+        <aside class="feedback-panel" aria-label="Current marker feedback">
+          <div id="currentMarkerPanel" class="current-marker">
+            <p class="eyebrow">Current marker</p>
+            <h2>No marker selected</h2>
+            <p>Select a marker from the dropdown or queue.</p>
+          </div>
 
-          <section class="feedback-form" aria-label="Feedback form">
-            <div class="field-row">
-              <div class="filter-group">
-                <label for="reviewerName">Reviewer</label>
-                <input id="reviewerName" type="text" placeholder="Name" autocomplete="name" />
-              </div>
-              <div class="filter-group">
-                <label for="reviewerSource">Group</label>
-                <select id="reviewerSource"></select>
-              </div>
-            </div>
-            <div class="filter-group">
-              <label for="feedbackDecision">Decision</label>
-              <select id="feedbackDecision">
-                <option value="confirm">Confirm marker</option>
-                <option value="revise">Revise details</option>
-                <option value="remove">Remove from panel</option>
-                <option value="question">Question / needs discussion</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label for="feedbackComment">Comment</label>
-              <textarea id="feedbackComment" placeholder="Correction, evidence, coordinate issue, trait note, or publication reference"></textarea>
-            </div>
-            <div class="submit-actions">
-              <button id="saveFeedback" type="button">Submit feedback for selected markers</button>
-              <button id="exportFeedback" type="button" class="secondary">Export feedback CSV</button>
-              <button id="exportCsv" type="button" class="secondary">Export visible markers CSV</button>
-              <button id="clearFeedback" type="button" class="ghost">Clear saved feedback</button>
-            </div>
-            <p class="feedback-status" id="feedbackStatus">Ready to submit.</p>
-            <p class="small-copy"><strong id="feedbackCount">0</strong> saved feedback items in this browser.</p>
-          </section>
-        </div>
+          <div class="selected-marker" id="selectedMarker">
+            <span>No markers selected</span>
+          </div>
+
+          <div class="filter-group">
+            <label for="reviewerName">Reviewer name</label>
+            <input id="reviewerName" type="text" placeholder="Name" autocomplete="name" />
+          </div>
+          <div class="filter-group">
+            <label for="feedbackDecision">Decision</label>
+            <select id="feedbackDecision">
+              <option value="confirm">Confirm marker</option>
+              <option value="revise">Revise details</option>
+              <option value="remove">Remove from panel</option>
+              <option value="question">Question / needs discussion</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="feedbackComment">Comment</label>
+            <textarea id="feedbackComment" placeholder="Correction, evidence, coordinate issue, trait note, or publication reference"></textarea>
+          </div>
+          <button id="saveFeedback" type="button">Submit feedback</button>
+          <button id="clearFeedback" type="button" class="ghost">Clear saved feedback</button>
+          <p class="feedback-status" id="feedbackStatus">Ready to submit.</p>
+          <p class="small-copy"><strong id="feedbackCount">0</strong> saved feedback items in this browser.</p>
+        </aside>
       </section>
     </main>
 

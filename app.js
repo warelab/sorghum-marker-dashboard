@@ -1,8 +1,8 @@
 const data = window.MARKER_DASHBOARD_DATA;
 
 const state = {
-  activeTab: "summary",
   selectedGroup: "",
+  currentMarkerId: "",
   search: "",
   trait: "All",
   chrom: "All",
@@ -26,18 +26,13 @@ const els = {
   arrayPanelMarkers: document.querySelector("#arrayPanelMarkers"),
   collaborators: document.querySelector("#collaborators"),
   dataSourceCount: document.querySelector("#dataSourceCount"),
-  tabButtons: document.querySelectorAll("[data-tab]"),
-  tabPanels: document.querySelectorAll("[data-panel]"),
-  groupCards: document.querySelector("#groupCards"),
-  chooseGroupCards: document.querySelector("#chooseGroupCards"),
   selectedGroupBanner: document.querySelector("#selectedGroupBanner"),
-  reviewGate: document.querySelector("#reviewGate"),
-  reviewWorkspace: document.querySelector("#reviewWorkspace"),
-  reviewGroupHeader: document.querySelector("#reviewGroupHeader"),
+  queueTitle: document.querySelector("#queueTitle"),
   traitFilter: document.querySelector("#traitFilter"),
   chromFilter: document.querySelector("#chromFilter"),
   priorityFilter: document.querySelector("#priorityFilter"),
   searchInput: document.querySelector("#searchInput"),
+  markerSelect: document.querySelector("#markerSelect"),
   resetFilters: document.querySelector("#resetFilters"),
   exportCsv: document.querySelector("#exportCsv"),
   selectAllVisible: document.querySelector("#selectAllVisible"),
@@ -46,6 +41,7 @@ const els = {
   selectedCount: document.querySelector("#selectedCount"),
   reviewerName: document.querySelector("#reviewerName"),
   reviewerSource: document.querySelector("#reviewerSource"),
+  currentMarkerPanel: document.querySelector("#currentMarkerPanel"),
   selectedMarker: document.querySelector("#selectedMarker"),
   feedbackDecision: document.querySelector("#feedbackDecision"),
   feedbackComment: document.querySelector("#feedbackComment"),
@@ -54,8 +50,6 @@ const els = {
   clearFeedback: document.querySelector("#clearFeedback"),
   feedbackStatus: document.querySelector("#feedbackStatus"),
   feedbackCount: document.querySelector("#feedbackCount"),
-  traitBars: document.querySelector("#traitBars"),
-  chromosomeBars: document.querySelector("#chromosomeBars"),
   catalogBody: document.querySelector("#catalogBody"),
   visibleCount: document.querySelector("#visibleCount"),
 };
@@ -98,142 +92,7 @@ function setGroupOptions(select, values) {
   });
 }
 
-function groupRows() {
-  const bySource = new Map();
-  data.catalog.forEach((row) => {
-    if (!bySource.has(row.source)) bySource.set(row.source, []);
-    bySource.get(row.source).push(row);
-  });
-
-  return data.collaborators
-    .map((collaborator) => {
-      const source = collaborator.source || collaborator.collaborator;
-      const rows = bySource.get(source) || [];
-      return {
-        collaborator: collaborator.collaborator || source,
-        source,
-        count: Number(collaborator.count || rows.length || 0),
-        reviewable: rows.length,
-        focus: collaborator.focus || "Marker review",
-        catalogScope: collaborator.catalogScope || "Curated catalog",
-        reviewed: rows.filter((row) => feedbackFor(row.canonicalId)).length,
-      };
-    })
-    .filter((row) => row.source)
-    .sort((a, b) => b.count - a.count || a.source.localeCompare(b.source));
-}
-
-function barList(target, rows, options = {}) {
-  const max = Math.max(...rows.map((row) => row.count), 1);
-  target.innerHTML = rows
-    .map((row) => {
-      const width = Math.max((row.count / max) * 100, 2);
-      const meta = row.meta ? `<span class="bar-meta">${row.meta}</span>` : "";
-      return `
-        <div class="bar-item">
-          <div class="bar-label">${escapeHtml(row.name)}${meta}</div>
-          <div class="bar-track"><div class="bar-fill" style="--w: ${width}%"></div></div>
-          <div class="bar-value">${format.format(row.count)}${options.percent ? "%" : ""}</div>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function renderStaticCharts() {
-  barList(
-    els.traitBars,
-    data.traitCounts.slice(0, 12).map((row) => ({
-      name: row.name,
-      count: row.count,
-    })),
-  );
-  renderChromosomes();
-}
-
-function renderChromosomes() {
-  const rows = data.chromosomeCounts
-    .filter((row) => row.name !== "Unspecified" && row.name !== "-")
-    .sort((a, b) => Number(a.name) - Number(b.name));
-  const max = Math.max(...rows.map((row) => row.count), 1);
-  els.chromosomeBars.innerHTML = rows
-    .map((row) => {
-      const height = Math.max((row.count / max) * 170, 8);
-      return `
-        <div class="chromosome">
-          <strong>${format.format(row.count)}</strong>
-          <div class="column" style="--h: ${height}px"></div>
-          <span>Chr ${escapeHtml(row.name)}</span>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function renderGroupCards() {
-  const rows = groupRows();
-  els.groupCards.innerHTML = rows.map((row) => groupCardTemplate(row, false)).join("");
-  els.chooseGroupCards.innerHTML = rows.map((row) => groupCardTemplate(row, true)).join("");
-  renderSelectedGroupBanner();
-}
-
-function groupCardTemplate(row, selectable) {
-  const isSelected = row.source === state.selectedGroup;
-  const progress = row.reviewable ? Math.round((row.reviewed / row.reviewable) * 100) : 0;
-  const reviewAction = row.reviewable
-    ? `<button type="button" class="group-select${selectable ? "" : " secondary"}" data-group="${escapeHtml(row.source)}">${isSelected ? "Selected" : selectable ? "Review this group" : "Open group"}</button>`
-    : `<button type="button" class="group-select secondary" disabled>Summary only</button>`;
-  const reviewableStat =
-    row.reviewable === row.count
-      ? ""
-      : `
-        <strong>${format.format(row.reviewable)}</strong>
-        <span>review rows</span>
-      `;
-  return `
-    <article class="group-card${isSelected ? " selected" : ""}">
-      <div>
-        <p class="eyebrow">${escapeHtml(row.catalogScope)}</p>
-        <h3>${escapeHtml(row.source)}</h3>
-        <p>${escapeHtml(row.focus)}</p>
-      </div>
-      <div class="group-stats">
-        <strong>${format.format(row.count)}</strong>
-        <span>markers</span>
-        ${reviewableStat}
-        <strong>${format.format(row.reviewed)}</strong>
-        <span>reviewed locally</span>
-      </div>
-      <div class="progress-line" aria-label="${progress}% reviewed locally"><span style="--w: ${progress}%"></span></div>
-      ${reviewAction}
-    </article>
-  `;
-}
-
-function renderSelectedGroupBanner() {
-  if (!state.selectedGroup) {
-    els.selectedGroupBanner.innerHTML = `
-      <p class="eyebrow">Current group</p>
-      <strong>No group selected</strong>
-      <span>Pick a group below to unlock the review table.</span>
-    `;
-    return;
-  }
-
-  const rows = catalogForSelectedGroup(false);
-  const reviewed = rows.filter((row) => feedbackFor(row.canonicalId)).length;
-  els.selectedGroupBanner.innerHTML = `
-    <p class="eyebrow">Current group</p>
-    <strong>${escapeHtml(state.selectedGroup)}</strong>
-    <span>${format.format(rows.length)} markers, ${format.format(reviewed)} reviewed locally.</span>
-  `;
-}
-
-function filteredCatalog() {
-  return catalogForSelectedGroup(true);
-}
-
-function catalogForSelectedGroup(applyFilters) {
+function catalogForSelectedGroup(applyFilters = true) {
   if (!state.selectedGroup) return [];
   const query = state.search.trim().toLowerCase();
   return data.catalog.filter((row) => {
@@ -250,39 +109,73 @@ function catalogForSelectedGroup(applyFilters) {
   });
 }
 
-function renderReviewHeader() {
-  if (!state.selectedGroup) {
-    els.reviewGate.hidden = false;
-    els.reviewWorkspace.hidden = true;
-    return;
-  }
+function filteredCatalog() {
+  return catalogForSelectedGroup(true);
+}
 
+function findMarker(markerId) {
+  return data.catalog.find((row) => row.canonicalId === markerId);
+}
+
+function renderGroupSummary() {
   const rows = catalogForSelectedGroup(false);
   const reviewed = rows.filter((row) => feedbackFor(row.canonicalId)).length;
-  els.reviewGate.hidden = true;
-  els.reviewWorkspace.hidden = false;
-  els.reviewGroupHeader.innerHTML = `
-    <div>
-      <p class="eyebrow">Reviewing group</p>
-      <h2>${escapeHtml(state.selectedGroup)}</h2>
-      <p>${format.format(rows.length)} total markers. ${format.format(reviewed)} have feedback saved in this browser.</p>
-    </div>
-    <button class="secondary jump-tab" type="button" data-tab="choose">Switch group</button>
+  if (!state.selectedGroup) {
+    els.queueTitle.textContent = "Pick a group to begin";
+    els.selectedGroupBanner.innerHTML = `
+      <strong>No group selected</strong>
+      <span>Pick a group to load the review queue.</span>
+    `;
+    return;
+  }
+  els.queueTitle.textContent = `${state.selectedGroup} review queue`;
+  els.selectedGroupBanner.innerHTML = `
+    <strong>${escapeHtml(state.selectedGroup)}</strong>
+    <span>${format.format(rows.length)} review rows, ${format.format(reviewed)} reviewed locally.</span>
   `;
 }
 
-function renderTable() {
-  renderReviewHeader();
+function renderMarkerSelect(rows) {
+  els.markerSelect.innerHTML = "";
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = rows.length ? "Select a marker from visible queue" : "No markers available";
+  els.markerSelect.appendChild(placeholder);
+
+  rows.forEach((row) => {
+    const option = document.createElement("option");
+    option.value = row.canonicalId;
+    option.textContent = `${row.canonicalId} | ${row.trait || "No trait"} | Chr ${row.chrom || "-"}`;
+    els.markerSelect.appendChild(option);
+  });
+
+  if (state.currentMarkerId && rows.some((row) => row.canonicalId === state.currentMarkerId)) {
+    els.markerSelect.value = state.currentMarkerId;
+  } else {
+    state.currentMarkerId = rows[0]?.canonicalId || "";
+    els.markerSelect.value = state.currentMarkerId;
+  }
+}
+
+function renderQueue() {
+  renderGroupSummary();
   const rows = filteredCatalog();
+  renderMarkerSelect(rows);
   els.visibleCount.textContent = format.format(rows.length);
+  els.selectedCount.textContent = `${format.format(selectedMarkerIds.size)} selected`;
+
   const visibleIds = rows.map((row) => row.canonicalId);
   const visibleSelectedCount = visibleIds.filter((id) => selectedMarkerIds.has(id)).length;
-  els.selectedCount.textContent = `${format.format(selectedMarkerIds.size)} selected`;
   els.selectAllCheckbox.checked = rows.length > 0 && visibleSelectedCount === rows.length;
   els.selectAllCheckbox.indeterminate = visibleSelectedCount > 0 && visibleSelectedCount < rows.length;
 
   if (!state.selectedGroup) {
-    els.catalogBody.innerHTML = "";
+    els.catalogBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-table">Choose a group to load markers.</td>
+      </tr>
+    `;
+    renderCurrentMarker();
     renderSelectionSummary();
     return;
   }
@@ -290,9 +183,10 @@ function renderTable() {
   if (!rows.length) {
     els.catalogBody.innerHTML = `
       <tr>
-        <td colspan="9" class="empty-table">No markers match the current search and filters.</td>
+        <td colspan="6" class="empty-table">No markers match the current filters.</td>
       </tr>
     `;
+    renderCurrentMarker();
     renderSelectionSummary();
     return;
   }
@@ -304,28 +198,51 @@ function renderTable() {
         ? `<span class="status-pill reviewed">${escapeHtml(decisionLabel(feedback.decision))}</span>`
         : `<span class="status-pill">Not reviewed</span>`;
       return `
-        <tr>
+        <tr class="${row.canonicalId === state.currentMarkerId ? "current-row" : ""}" data-marker-row="${escapeHtml(row.canonicalId)}">
           <td class="checkbox-col">
             <input type="checkbox" class="marker-checkbox" data-marker-id="${escapeHtml(row.canonicalId)}" ${selectedMarkerIds.has(row.canonicalId) ? "checked" : ""} aria-label="Select ${escapeHtml(row.canonicalId)}" />
           </td>
-          <td><strong>${escapeHtml(row.canonicalId)}</strong></td>
+          <td><button class="link-action" type="button" data-focus-marker="${escapeHtml(row.canonicalId)}">${escapeHtml(row.canonicalId)}</button></td>
           <td>${escapeHtml(row.trait)}</td>
-          <td><strong>${escapeHtml(row.locus)}</strong><br>${escapeHtml(row.markerType || "")}</td>
           <td>${escapeHtml(row.chrom)}</td>
-          <td>${formatPosition(row)}</td>
           <td>${row.priority ? `P${escapeHtml(row.priority)}` : ""}</td>
-          <td>${escapeHtml(row.evidence)}</td>
-          <td>
-            <button class="row-action" type="button" data-marker-id="${escapeHtml(row.canonicalId)}">
-              ${selectedMarkerIds.has(row.canonicalId) ? "Selected" : "Select"}
-            </button>
-            ${status}
-          </td>
+          <td>${status}</td>
         </tr>
       `;
     })
     .join("");
+
+  renderCurrentMarker();
   renderSelectionSummary();
+}
+
+function renderCurrentMarker() {
+  const marker = findMarker(state.currentMarkerId);
+  if (!marker) {
+    els.currentMarkerPanel.innerHTML = `
+      <p class="eyebrow">Current marker</p>
+      <h2>No marker selected</h2>
+      <p>Select a marker from the dropdown or queue.</p>
+    `;
+    return;
+  }
+
+  const isSelected = selectedMarkerIds.has(marker.canonicalId);
+  const feedback = feedbackFor(marker.canonicalId);
+  els.currentMarkerPanel.innerHTML = `
+    <p class="eyebrow">Current marker</p>
+    <h2>${escapeHtml(marker.canonicalId)}</h2>
+    <dl class="marker-facts">
+      <div><dt>Trait</dt><dd>${escapeHtml(marker.trait)}</dd></div>
+      <div><dt>Original name</dt><dd>${escapeHtml(marker.originalName || marker.locus || "")}</dd></div>
+      <div><dt>Chromosome</dt><dd>${escapeHtml(marker.chrom)}</dd></div>
+      <div><dt>Position</dt><dd>${formatPosition(marker)}</dd></div>
+      <div><dt>Priority</dt><dd>${marker.priority ? `P${escapeHtml(marker.priority)}` : ""}</dd></div>
+      <div><dt>Evidence</dt><dd>${escapeHtml(marker.evidence)}</dd></div>
+    </dl>
+    <button type="button" class="secondary" data-toggle-current="${escapeHtml(marker.canonicalId)}">${isSelected ? "Remove from selection" : "Add marker to selection"}</button>
+    ${feedback ? `<p class="review-note">Saved locally: ${escapeHtml(decisionLabel(feedback.decision))}</p>` : ""}
+  `;
 }
 
 function decisionLabel(value) {
@@ -384,40 +301,47 @@ function renderSelectionSummary() {
   }
 
   const preview = selectedRows
-    .slice(0, 5)
+    .slice(0, 4)
     .map((row) => row.canonicalId)
     .join(", ");
-  const suffix = selectedRows.length > 5 ? ` + ${selectedRows.length - 5} more` : "";
+  const suffix = selectedRows.length > 4 ? ` + ${selectedRows.length - 4} more` : "";
   els.selectedMarker.innerHTML = `
     <strong>${format.format(selectedRows.length)} markers selected</strong>
     <span>${escapeHtml(preview + suffix)}</span>
   `;
 }
 
+function focusMarker(markerId, selectMarker = false) {
+  if (!markerId) return;
+  state.currentMarkerId = markerId;
+  if (selectMarker) selectedMarkerIds.add(markerId);
+  renderQueue();
+}
+
 function toggleMarkerSelection(markerId) {
+  state.currentMarkerId = markerId;
   if (selectedMarkerIds.has(markerId)) {
     selectedMarkerIds.delete(markerId);
   } else {
     selectedMarkerIds.add(markerId);
   }
-  renderTable();
+  renderQueue();
 }
 
 function selectAllVisibleMarkers() {
   filteredCatalog().forEach((row) => selectedMarkerIds.add(row.canonicalId));
-  renderTable();
+  renderQueue();
 }
 
 function clearSelection() {
   selectedMarkerIds.clear();
-  renderTable();
+  renderQueue();
 }
 
 async function saveFeedback() {
   if (!selectedMarkerIds.size) {
     els.selectedMarker.innerHTML = "<span>Select one or more markers before submitting feedback.</span>";
     setFeedbackStatus("Select one or more markers before submitting.", "warning");
-    switchTab("review");
     return;
   }
 
@@ -434,12 +358,11 @@ async function saveFeedback() {
 
   saveFeedbackItemsLocally(items);
   updateFeedbackCount();
-  renderGroupCards();
-  renderTable();
+  renderQueue();
 
   if (!isFeedbackFormConfigured()) {
     selectedMarkerIds.clear();
-    renderAll();
+    renderQueue();
     setFeedbackStatus(`Saved ${format.format(items.length)} markers locally. Export CSV backup.`, "warning");
     return;
   }
@@ -449,11 +372,11 @@ async function saveFeedback() {
   try {
     await submitFeedbackItemsToGoogleForm(items);
     selectedMarkerIds.clear();
-    renderAll();
+    renderQueue();
     setFeedbackStatus(`Submitted ${format.format(items.length)} markers.`, "success");
   } catch (error) {
     selectedMarkerIds.clear();
-    renderAll();
+    renderQueue();
     setFeedbackStatus("Submission failed; export CSV backup.", "error");
   } finally {
     els.saveFeedback.disabled = false;
@@ -542,7 +465,7 @@ function clearFeedback() {
   feedbackItems = [];
   localStorage.removeItem(STORAGE_KEYS.feedback);
   updateFeedbackCount();
-  renderAll();
+  renderQueue();
 }
 
 function feedbackFor(markerId) {
@@ -567,21 +490,11 @@ function selectGroup(source) {
     reviewer.source = source;
   }
   selectedMarkerIds.clear();
+  state.currentMarkerId = "";
   resetMarkerFilters(false);
   els.reviewerSource.value = reviewer.source;
   localStorage.setItem(STORAGE_KEYS.reviewer, JSON.stringify(reviewer));
-  switchTab(state.selectedGroup ? "review" : "choose");
-  renderAll();
-}
-
-function switchTab(tab) {
-  state.activeTab = tab;
-  document.querySelectorAll(".tab-button").forEach((button) => {
-    button.classList.toggle("active", button.dataset.tab === tab);
-  });
-  els.tabPanels.forEach((panel) => {
-    panel.classList.toggle("active", panel.dataset.panel === tab);
-  });
+  renderQueue();
 }
 
 function resetMarkerFilters(render = true) {
@@ -593,13 +506,7 @@ function resetMarkerFilters(render = true) {
   els.traitFilter.value = "All";
   els.chromFilter.value = "All";
   els.priorityFilter.value = "All";
-  if (render) renderTable();
-}
-
-function renderAll() {
-  renderGroupCards();
-  renderTable();
-  renderSelectionSummary();
+  if (render) renderQueue();
 }
 
 function loadJson(key, fallback) {
@@ -642,22 +549,15 @@ function escapeHtml(value) {
 }
 
 function bindEvents() {
-  document.addEventListener("click", (event) => {
-    const tabButton = event.target.closest("[data-tab]");
-    if (tabButton) {
-      switchTab(tabButton.dataset.tab);
-      return;
-    }
-    const groupButton = event.target.closest("[data-group]");
-    if (groupButton) {
-      selectGroup(groupButton.dataset.group);
-    }
-  });
-
   els.searchInput.addEventListener("input", (event) => {
     state.search = event.target.value;
     selectedMarkerIds.clear();
-    renderTable();
+    state.currentMarkerId = "";
+    renderQueue();
+  });
+
+  els.markerSelect.addEventListener("change", (event) => {
+    focusMarker(event.target.value, true);
   });
 
   [
@@ -668,7 +568,8 @@ function bindEvents() {
     select.addEventListener("change", (event) => {
       state[key] = event.target.value;
       selectedMarkerIds.clear();
-      renderTable();
+      state.currentMarkerId = "";
+      renderQueue();
     });
   });
 
@@ -682,7 +583,7 @@ function bindEvents() {
       return;
     }
     filteredCatalog().forEach((row) => selectedMarkerIds.delete(row.canonicalId));
-    renderTable();
+    renderQueue();
   });
   els.catalogBody.addEventListener("click", (event) => {
     const checkbox = event.target.closest(".marker-checkbox");
@@ -690,9 +591,15 @@ function bindEvents() {
       toggleMarkerSelection(checkbox.dataset.markerId);
       return;
     }
-    const button = event.target.closest("[data-marker-id]");
+    const focusButton = event.target.closest("[data-focus-marker]");
+    if (focusButton) {
+      focusMarker(focusButton.dataset.focusMarker);
+    }
+  });
+  els.currentMarkerPanel.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-toggle-current]");
     if (!button) return;
-    toggleMarkerSelection(button.dataset.markerId);
+    toggleMarkerSelection(button.dataset.toggleCurrent);
   });
   els.saveFeedback.addEventListener("click", saveFeedback);
   els.exportFeedback.addEventListener("click", exportFeedbackCsv);
@@ -728,14 +635,12 @@ function init() {
   }
 
   bindEvents();
-  renderStaticCharts();
   updateFeedbackCount();
   setFeedbackStatus(
     isFeedbackFormConfigured() ? "Ready to submit." : "Form not connected; CSV backup enabled.",
     isFeedbackFormConfigured() ? "ready" : "warning",
   );
-  switchTab("summary");
-  renderAll();
+  renderQueue();
 }
 
 init();
