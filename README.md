@@ -25,11 +25,14 @@ Then open `http://localhost:8080`.
 
 ## Feedback workflow
 
-1. Ask collaborators to enter their reviewer name and group in the left feedback panel.
-2. They can filter/search the curated catalog and select one or more marker rows.
-3. They choose a decision, add an optional comment, and submit feedback.
-4. If Google Forms is configured, one response row is sent per selected marker.
-5. The dashboard also keeps a browser-local CSV backup.
+Share `CURATOR_REVIEW_INSTRUCTIONS.md` with collaborators for step-by-step marker validation instructions.
+
+1. Ask collaborators to choose their group from the `Group` dropdown.
+2. They can search/filter the review queue and inspect markers in the current-marker panel.
+3. They select one marker, several markers, or all visible markers.
+4. They choose a decision, add an optional comment, and submit feedback.
+5. If Google Forms is configured, one response row is sent per selected marker.
+6. The dashboard also keeps a browser-local CSV backup.
 
 Google Forms setup is documented in `GOOGLE_FORM_SETUP.md`. Until `feedback-config.js` is connected to a real form, feedback is stored locally and can be exported as `sorghum_marker_feedback.csv`.
 
