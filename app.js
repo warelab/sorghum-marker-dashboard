@@ -145,7 +145,7 @@ function renderMarkerSelect(rows) {
   rows.forEach((row) => {
     const option = document.createElement("option");
     option.value = row.canonicalId;
-    option.textContent = `${row.canonicalId} | ${row.trait || "No trait"} | Chr ${row.chrom || "-"}`;
+    option.textContent = `${row.canonicalId} | ${row.trait || "No trait"} | Chr ${row.chrom || "-"} | ${formatPosition(row) || "No coordinate"}`;
     els.markerSelect.appendChild(option);
   });
 
@@ -172,7 +172,7 @@ function renderQueue() {
   if (!state.selectedGroup) {
     els.catalogBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-table">Choose a group to load markers.</td>
+        <td colspan="7" class="empty-table">Choose a group to load markers.</td>
       </tr>
     `;
     renderCurrentMarker();
@@ -183,7 +183,7 @@ function renderQueue() {
   if (!rows.length) {
     els.catalogBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-table">No markers match the current filters.</td>
+        <td colspan="7" class="empty-table">No markers match the current filters.</td>
       </tr>
     `;
     renderCurrentMarker();
@@ -205,6 +205,7 @@ function renderQueue() {
           <td><button class="link-action" type="button" data-focus-marker="${escapeHtml(row.canonicalId)}">${escapeHtml(row.canonicalId)}</button></td>
           <td>${escapeHtml(row.trait)}</td>
           <td>${escapeHtml(row.chrom)}</td>
+          <td>${formatPosition(row)}</td>
           <td>${row.priority ? `P${escapeHtml(row.priority)}` : ""}</td>
           <td>${status}</td>
         </tr>
