@@ -1,4 +1,4 @@
-# Marker Review Queue
+# Sorghum Marker Review
 
 Public collaborator review app for the sorghum 100K marker panel curation.
 
