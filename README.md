@@ -1,4 +1,4 @@
-# Sorghum Marker Database Dashboard
+# Marker Review Queue
 
 Open `index.html` in a browser to review collaborator marker counts, curated marker filters, chromosome distribution, annotation summaries, and marker-level feedback.
 
