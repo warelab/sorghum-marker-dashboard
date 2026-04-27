@@ -6,7 +6,6 @@ const state = {
   search: "",
   trait: "All",
   chrom: "All",
-  priority: "All",
 };
 
 const STORAGE_KEYS = {
@@ -30,7 +29,6 @@ const els = {
   queueTitle: document.querySelector("#queueTitle"),
   traitFilter: document.querySelector("#traitFilter"),
   chromFilter: document.querySelector("#chromFilter"),
-  priorityFilter: document.querySelector("#priorityFilter"),
   searchInput: document.querySelector("#searchInput"),
   markerSelect: document.querySelector("#markerSelect"),
   resetFilters: document.querySelector("#resetFilters"),
@@ -102,7 +100,6 @@ function catalogForSelectedGroup(applyFilters = true) {
     if (!applyFilters) return true;
     if (state.trait !== "All" && row.trait !== state.trait) return false;
     if (state.chrom !== "All" && row.chrom !== state.chrom) return false;
-    if (state.priority !== "All" && row.priority !== state.priority) return false;
     if (!query) return true;
     return [row.canonicalId, row.trait, row.locus, row.chrom, row.source, row.evidence, row.markerType]
       .join(" ")
@@ -223,7 +220,6 @@ function renderQueue() {
           <td>${escapeHtml(row.trait)}</td>
           <td>${escapeHtml(row.chrom)}</td>
           <td>${formatPosition(row)}</td>
-          <td>${row.priority ? `P${escapeHtml(row.priority)}` : ""}</td>
           <td>${status}</td>
         </tr>
       `;
@@ -307,7 +303,6 @@ function renderCurrentMarker() {
       <div><dt>Original name</dt><dd>${escapeHtml(marker.originalName || marker.locus || "")}</dd></div>
       <div><dt>Chromosome</dt><dd>${escapeHtml(marker.chrom)}</dd></div>
       <div><dt>Position</dt><dd>${formatPosition(marker)}</dd></div>
-      <div><dt>Priority</dt><dd>${marker.priority ? `P${escapeHtml(marker.priority)}` : ""}</dd></div>
       <div><dt>Evidence</dt><dd>${escapeHtml(marker.evidence)}</dd></div>
     </dl>
     <button type="button" class="secondary" data-toggle-current="${escapeHtml(marker.canonicalId)}">${isSelected ? "Remove from selection" : "Add marker to selection"}</button>
@@ -343,7 +338,6 @@ function exportCsv() {
     "posEnd",
     "ref",
     "alt",
-    "priority",
     "source",
     "sourceCode",
     "evidence",
@@ -571,11 +565,9 @@ function resetMarkerFilters(render = true) {
   state.search = "";
   state.trait = "All";
   state.chrom = "All";
-  state.priority = "All";
   els.searchInput.value = "";
   els.traitFilter.value = "All";
   els.chromFilter.value = "All";
-  els.priorityFilter.value = "All";
   if (render) renderQueue();
 }
 
@@ -633,7 +625,6 @@ function bindEvents() {
   [
     [els.traitFilter, "trait"],
     [els.chromFilter, "chrom"],
-    [els.priorityFilter, "priority"],
   ].forEach(([select, key]) => {
     select.addEventListener("change", (event) => {
       state[key] = event.target.value;
@@ -698,7 +689,6 @@ function init() {
   const sources = uniqueValues("source");
   setOptions(els.traitFilter, uniqueValues("trait"));
   setOptions(els.chromFilter, uniqueValues("chrom"));
-  setOptions(els.priorityFilter, uniqueValues("priority"));
   setGroupOptions(els.reviewerSource, sources);
   els.reviewerName.value = reviewer.name || "";
   if (reviewer.source && reviewer.source !== "All" && sources.includes(reviewer.source)) {
