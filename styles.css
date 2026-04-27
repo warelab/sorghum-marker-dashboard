@@ -178,6 +178,130 @@ label {
   margin-bottom: 12px;
 }
 
+.karyotype-panel {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.karyotype-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.karyotype-header p {
+  color: var(--muted);
+  line-height: 1.45;
+  text-align: right;
+}
+
+.karyotype-plot {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(42px, 1fr));
+  gap: 10px;
+  min-height: 260px;
+  padding: 8px 0 4px;
+}
+
+.karyotype-empty {
+  grid-column: 1 / -1;
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  color: var(--muted);
+  background: var(--panel-soft);
+}
+
+.chromosome-track {
+  display: grid;
+  grid-template-rows: auto 210px auto;
+  gap: 7px;
+  justify-items: center;
+  min-width: 0;
+}
+
+.chromosome-label,
+.chromosome-count {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.chromosome-body {
+  position: relative;
+  width: min(38px, 100%);
+  height: 210px;
+  border: 1px solid #cdd6c8;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f7faf4 0%, #e7eee2 100%);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.45);
+}
+
+.marker-tick {
+  position: absolute;
+  left: 50%;
+  width: 26px;
+  min-height: 0;
+  height: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--info);
+  transform: translate(-50%, -50%);
+  top: var(--y);
+}
+
+.marker-tick:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+  background: var(--accent-strong);
+}
+
+.marker-tick.selected {
+  height: 6px;
+  background: var(--accent);
+}
+
+.marker-tick.current {
+  width: 34px;
+  height: 8px;
+  background: var(--warn);
+  z-index: 2;
+}
+
+.karyotype-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.karyotype-legend span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 18px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--info);
+}
+
+.legend-dot.selected-dot {
+  background: var(--accent);
+}
+
+.legend-dot.current-dot {
+  background: var(--warn);
+}
+
 .filter-group {
   display: grid;
   gap: 7px;
@@ -466,15 +590,44 @@ tr.current-row {
 
   .metrics,
   .filters-panel,
-  .marker-picker {
+  .marker-picker,
+  .karyotype-plot {
     grid-template-columns: 1fr;
   }
 
   .queue-header,
   .header-actions,
-  .queue-actions {
+  .queue-actions,
+  .karyotype-header {
     display: grid;
     justify-content: stretch;
+  }
+
+  .karyotype-header p {
+    text-align: left;
+  }
+
+  .chromosome-track {
+    grid-template-columns: 64px minmax(0, 1fr) 48px;
+    grid-template-rows: 1fr;
+    align-items: center;
+  }
+
+  .chromosome-body {
+    width: 100%;
+    height: 30px;
+  }
+
+  .marker-tick {
+    top: 50%;
+    left: var(--y);
+    width: 4px;
+    height: 24px;
+  }
+
+  .marker-tick.current {
+    width: 7px;
+    height: 30px;
   }
 
   .queue-panel,

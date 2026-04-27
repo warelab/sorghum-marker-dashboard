@@ -9,10 +9,13 @@ import re
 from collections import Counter
 from pathlib import Path
 
+import pandas as pd
+
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
+MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
 
 
 COLLABORATOR_META = {
@@ -132,6 +135,15 @@ def clean_int(value: str) -> int | None:
         return None
 
 
+def normalize_chrom(value: object) -> str:
+    text = str(value or "").strip()
+    if not text or text in {"-", "nan", "None"}:
+        return "-"
+    text = re.sub(r"^(chr|Chr|CHR)", "", text)
+    text = text.lstrip("0") or "0"
+    return text
+
+
 def clean_allele(value: str) -> str:
     value = (value or "").strip().upper()
     value = re.sub(r"\s*\([^)]*\)", "", value)
@@ -240,6 +252,53 @@ def read_catalog() -> list[dict[str, object]]:
     return rows
 
 
+def read_meseret_panel() -> list[dict[str, object]]:
+    if not MESERET_PANEL.exists():
+        return []
+
+    panel = pd.read_excel(MESERET_PANEL, sheet_name="Sorghum_Panel_Shared", engine="pyxlsb")
+    panel = panel.rename(columns=str.strip)
+    rows: list[dict[str, object]] = []
+
+    for i, raw in panel.iterrows():
+        chrom = normalize_chrom(raw.get("chrom"))
+        pos = clean_int(str(raw.get("position", "")))
+        marker = str(raw.get("marker") or "").strip()
+        group = str(raw.get("group") or "").strip()
+        note = str(raw.get("Note") or "").strip()
+        eibv2 = str(raw.get("EiBv2") or "").strip().lower()
+
+        if chrom == "-" or pos is None:
+            continue
+
+        trait = group if group else "Array panel"
+        evidence_bits = ["100K SNP array panel design"]
+        if note:
+            evidence_bits.append(note)
+        if eibv2 in {"yes", "no"}:
+            evidence_bits.append(f"EiBv2={eibv2}")
+
+        rows.append(
+            {
+                "index": f"MES-{i + 1}",
+                "trait": trait,
+                "locus": marker or f"MESERET_{chrom}_{pos}",
+                "chrom": chrom,
+                "posStart": pos,
+                "posEnd": pos,
+                "ref": "-",
+                "alt": "-",
+                "evidence": " | ".join(evidence_bits),
+                "priority": "3",
+                "source": "Meseret/BI",
+                "markerType": "SNP",
+                "genomeVersion": "BTx623_NCBIv3",
+            }
+        )
+
+    return rows
+
+
 def read_summary(path: str) -> list[dict[str, object]]:
     with (ROOT / path).open(newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
@@ -253,7 +312,6 @@ def top_counts(rows: list[dict[str, object]], key: str, limit: int | None = None
 
 def collaborator_rows(catalog: list[dict[str, object]]) -> list[dict[str, object]]:
     counts = Counter(str(row["source"]) for row in catalog)
-    counts["Meseret/BI"] = 9115
     result = []
     for source, count in counts.most_common():
         meta = COLLABORATOR_META.get(source, {})
@@ -285,6 +343,7 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
         "source",
         "sourceCode",
         "evidence",
+        "genomeVersion",
     ]
     with NORMALIZED_OUT.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", extrasaction="ignore")
@@ -293,7 +352,10 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
 
 
 def main() -> None:
-    catalog = read_catalog()
+    curated_catalog = read_catalog()
+    meseret_catalog = read_meseret_panel()
+    catalog = curated_catalog + meseret_catalog
+    add_canonical_ids(catalog)
     write_normalized_catalog(catalog)
     region_summary = read_summary("results/summary_region_class.tsv")
     chromosome_annotation = read_summary("results/summary_per_chromosome.tsv")
@@ -302,15 +364,16 @@ def main() -> None:
     payload = {
         "generatedFrom": [
             "marker_catalog_304_corrected.tsv",
+            "Meseret_Wondifraw_BI/Sorghum_Panel_Shared.xlsb",
             "marker_extraction_report.md",
             "results/summary_region_class.tsv",
             "results/summary_per_chromosome.tsv",
             "results/summary_per_gene.tsv",
         ],
         "totals": {
-            "curatedMarkers": len(catalog),
-            "arrayPanelMarkers": 9115,
-            "totalMarkers": len(catalog) + 9115,
+            "curatedMarkers": len(curated_catalog),
+            "arrayPanelMarkers": len(meseret_catalog),
+            "totalMarkers": len(catalog),
             "collaborators": 15,
             "chromosomes": len({row["chrom"] for row in catalog if row.get("chrom") and row["chrom"] != "-"}),
         },

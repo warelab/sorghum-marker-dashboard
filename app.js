@@ -52,6 +52,8 @@ const els = {
   feedbackCount: document.querySelector("#feedbackCount"),
   catalogBody: document.querySelector("#catalogBody"),
   visibleCount: document.querySelector("#visibleCount"),
+  karyotypePlot: document.querySelector("#karyotypePlot"),
+  karyotypeSummary: document.querySelector("#karyotypeSummary"),
 };
 
 const format = new Intl.NumberFormat("en-US");
@@ -113,6 +115,20 @@ function filteredCatalog() {
   return catalogForSelectedGroup(true);
 }
 
+function chromosomeValues() {
+  return uniqueValues("chrom").filter((chrom) => chrom !== "-" && chrom !== "Unspecified");
+}
+
+function chromosomeExtentMap() {
+  return data.catalog.reduce((acc, row) => {
+    const chrom = row.chrom || "";
+    const position = Number(row.posStart || row.posEnd || 0);
+    if (!chrom || !position) return acc;
+    acc[chrom] = Math.max(acc[chrom] || 0, position);
+    return acc;
+  }, {});
+}
+
 function findMarker(markerId) {
   return data.catalog.find((row) => row.canonicalId === markerId);
 }
@@ -161,6 +177,7 @@ function renderQueue() {
   renderGroupSummary();
   const rows = filteredCatalog();
   renderMarkerSelect(rows);
+  renderKaryotype(rows);
   els.visibleCount.textContent = format.format(rows.length);
   els.selectedCount.textContent = `${format.format(selectedMarkerIds.size)} selected`;
 
@@ -215,6 +232,58 @@ function renderQueue() {
 
   renderCurrentMarker();
   renderSelectionSummary();
+}
+
+function renderKaryotype(rows) {
+  if (!state.selectedGroup) {
+    els.karyotypeSummary.textContent = "Choose a group to view marker positions.";
+    els.karyotypePlot.innerHTML = `<div class="karyotype-empty">No group selected</div>`;
+    return;
+  }
+
+  const chromosomes = chromosomeValues();
+  const extents = chromosomeExtentMap();
+  const rowsByChrom = rows.reduce((acc, row) => {
+    const chrom = row.chrom || "";
+    if (!chrom) return acc;
+    if (!acc[chrom]) acc[chrom] = [];
+    acc[chrom].push(row);
+    return acc;
+  }, {});
+  const plottedCount = rows.filter((row) => Number(row.posStart || row.posEnd || 0) > 0).length;
+  els.karyotypeSummary.textContent = `${format.format(plottedCount)} marker positions shown for ${state.selectedGroup}.`;
+
+  els.karyotypePlot.innerHTML = chromosomes
+    .map((chrom) => {
+      const chromRows = rowsByChrom[chrom] || [];
+      const extent = Math.max(extents[chrom] || 1, 1);
+      const ticks = chromRows
+        .filter((row) => Number(row.posStart || row.posEnd || 0) > 0)
+        .map((row) => {
+          const position = Number(row.posStart || row.posEnd || 0);
+          const top = Math.min(Math.max((position / extent) * 100, 0), 100);
+          const classNames = [
+            "marker-tick",
+            selectedMarkerIds.has(row.canonicalId) ? "selected" : "",
+            row.canonicalId === state.currentMarkerId ? "current" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
+          return `<button class="${classNames}" type="button" data-karyotype-marker="${escapeHtml(row.canonicalId)}" style="--y: ${top}%" title="${escapeHtml(row.canonicalId)} | Chr ${escapeHtml(chrom)}:${formatPosition(row)}"></button>`;
+        })
+        .join("");
+
+      return `
+        <div class="chromosome-track">
+          <div class="chromosome-label">Chr ${escapeHtml(chrom)}</div>
+          <div class="chromosome-body" aria-label="Chromosome ${escapeHtml(chrom)} markers">
+            ${ticks}
+          </div>
+          <div class="chromosome-count">${format.format(chromRows.length)}</div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function renderCurrentMarker() {
@@ -596,6 +665,11 @@ function bindEvents() {
     if (focusButton) {
       focusMarker(focusButton.dataset.focusMarker);
     }
+  });
+  els.karyotypePlot.addEventListener("click", (event) => {
+    const tick = event.target.closest("[data-karyotype-marker]");
+    if (!tick) return;
+    focusMarker(tick.dataset.karyotypeMarker);
   });
   els.currentMarkerPanel.addEventListener("click", (event) => {
     const button = event.target.closest("[data-toggle-current]");
