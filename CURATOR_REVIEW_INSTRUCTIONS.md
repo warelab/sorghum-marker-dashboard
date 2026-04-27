@@ -18,7 +18,6 @@ For each marker, check:
 - Coordinate / position
 - Original marker name
 - Evidence
-- Priority
 
 ## How to Review Markers
 
@@ -28,11 +27,11 @@ For each marker, check:
 
 3. The review queue will load markers assigned to your group.
 
-4. Review each marker in the queue. The table shows the marker ID, trait, chromosome, coordinate, priority, and review status.
+4. Review each marker in the queue. The table shows the marker ID, trait, chromosome, coordinate, and review status.
 
 5. Use the `Marker dropdown` or click marker IDs in the queue to inspect a marker in the `Current marker` panel.
 
-6. In the `Current marker` panel, check the marker details, including original name, chromosome, position, priority, and evidence.
+6. In the `Current marker` panel, check the marker details, including original name, chromosome, position, and evidence.
 
 7. Select markers for feedback:
 

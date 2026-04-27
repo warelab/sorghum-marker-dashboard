@@ -11,7 +11,7 @@ https://warelab.github.io/sorghum-marker-dashboard/
 ## What collaborators can do
 
 - Review collaborator marker counts and trait coverage.
-- Search and filter curated markers by source, trait, chromosome, priority, standard ID, and original marker name.
+- Search and filter curated markers by source, trait, chromosome, standard ID, and original marker name.
 - Review marker-level details and standardized marker IDs.
 - Select one or more markers and submit one feedback row per marker.
 - Send feedback to a linked Google Form when configured.
