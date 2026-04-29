@@ -49,7 +49,7 @@ COLLABORATOR_META = {
         "institution": "USDA-ARS",
         "focus": "Photoperiod pathway genes",
     },
-    "Odeny/ICRISAT": {
+    "ICRISAT/EiB": {
         "display": "Damaris Odeny",
         "institution": "ICRISAT",
         "focus": "Drought and Striga resistance",
@@ -64,7 +64,7 @@ COLLABORATOR_META = {
         "institution": "Texas Tech University",
         "focus": "Functional traits and QTLs",
     },
-    "Varma/SRM-IST": {
+    "RajaNS/SRM-IST": {
         "display": "Raja Varma",
         "institution": "SRM Institute of Science & Technology",
         "focus": "lncRNA regulatory networks",
@@ -104,15 +104,20 @@ SOURCE_CODES = {
     "EIB/AgriPlex": "EIB-AGR",
     "Fattel/Clemson": "FAT-CLE",
     "Tadesse/USDA": "TAD-USDA",
-    "Odeny/ICRISAT": "ODE-ICR",
+    "ICRISAT/EiB": "ODE-ICR",
     "Cuevas/USDA": "CUE-USDA",
     "Saini/TTU": "SAI-TTU",
-    "Varma/SRM-IST": "VAR-SRM",
+    "RajaNS/SRM-IST": "VAR-SRM",
     "Marla/KSU": "MAR-KSU",
     "Yerka/YJ": "YER-YJ",
     "Enyew/WSU": "ENY-WSU",
     "Jura/SbMATE": "JUR-SBM",
     "Meseret/BI": "MES-BI",
+}
+
+SOURCE_ALIASES = {
+    "Odeny/ICRISAT": "ICRISAT/EiB",
+    "Varma/SRM-IST": "RajaNS/SRM-IST",
 }
 
 
@@ -152,10 +157,16 @@ def clean_allele(value: str) -> str:
 
 
 def source_code(source: str) -> str:
+    source = SOURCE_ALIASES.get(source, source)
     if source in SOURCE_CODES:
         return SOURCE_CODES[source]
     code = re.sub(r"[^A-Za-z0-9]+", "-", source.upper()).strip("-")
     return code[:12] or "UNKNOWN"
+
+
+def normalize_source(source: object) -> str:
+    text = str(source or "").strip()
+    return SOURCE_ALIASES.get(text, text)
 
 
 def marker_class(row: dict[str, object]) -> str:
@@ -215,7 +226,7 @@ def normalized_row(raw: list[str]) -> dict[str, object] | None:
             "alt": raw[7],
             "evidence": raw[8],
             "priority": raw[9],
-            "source": raw[10],
+            "source": normalize_source(raw[10]),
             "markerType": raw[11],
         }
 
