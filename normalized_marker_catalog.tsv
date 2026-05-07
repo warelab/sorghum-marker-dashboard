@@ -395,6 +395,32 @@ S100K-SNP-SB03-071104827-G-A-02	SbMATE_5947	Aluminum tolerance	SNP	3	71104827	71
 S100K-SNP-SB03-071104827-T-C	SbMATE_24804	Aluminum tolerance	SNP	3	71104827	71108073	T	C	2	Jura/SbMATE	JUR-SBM	SbMATE functional marker (PMID:24498106)	
 S100K-SNP-SB03-071104827-G-T	SbMATE_8364	Aluminum tolerance	SNP	3	71104827	71108073	G	T	2	Jura/SbMATE	JUR-SBM	SbMATE functional marker (PMID:24498106)	
 S100K-SNP-SB03-071104827-C-A-02	SbMATE_8423	Aluminum tolerance	SNP	3	71104827	71108073	C	A	2	Jura/SbMATE	JUR-SBM	SbMATE functional marker (PMID:24498106)	
+S100K-SNP-SB02-006045380-NA-NA-02	AGR_MID_SB02_6045380	Fertility restoration	SNP	2	6045380	6045380	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-006843380-NA-NA-02	AGR_MID_SB02_6843380	Fertility restoration	SNP	2	6843380	6843380	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-008715821-NA-NA-02	AGR_MID_SB02_8715821	Fertility restoration	SNP	2	8715821	8715821	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-059000770-NA-NA-02	AGR_MID_SB02_59000770	Post-flowering Drought tolerance	SNP	2	59000770	59000770	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-059821923-NA-NA-02	AGR_MID_SB02_59821923	Post-flowering Drought tolerance	SNP	2	59821923	59821923	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-060098184-NA-NA-02	AGR_MID_SB02_60098184	Post-flowering Drought tolerance	SNP	2	60098184	60098184	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-061811307-NA-NA-02	AGR_MID_SB02_61811307	Post-flowering Drought tolerance/Fertility restoration	SNP	2	61811307	61811307	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-067306935-NA-NA-02	AGR_MID_SB02_67306935	Post-flowering Drought tolerance	SNP	2	67306935	67306935	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-067710384-NA-NA-02	AGR_MID_SB02_67710384	Post-flowering Drought tolerance	SNP	2	67710384	67710384	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB02-071419274-NA-NA-02	AGR_MID_SB02_71419274	Post-flowering Drought tolerance	SNP	2	71419274	71419274	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB03-030310883-NA-NA-02	AGR_MID_SB03_30310883	Fertility restoration gene	SNP	3	30310883	30310883	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB04-000364279-NA-NA-02	AGR_MID_SB04_364279	Fertility restoration gene	SNP	4	364279	364279	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB05-000838874-NA-NA-02	AGR_MID_SB05_838874	Shoot fly resistance, Leaf Glossiness	SNP	5	838874	838874	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB05-001608322-NA-NA-02	AGR_MID_SB05_1608322	Fertility restoration	SNP	5	1608322	1608322	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB05-069794954-NA-NA-02	AGR_MID_SB05_69794954	Striga Resistance, StrR	SNP	5	69794954	69794954	-	-		Agriplex mid density markers	AGR-MID	Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114	BTx623_NCBIv3
+S100K-SNP-SB05-069847924-NA-NA-02	AGR_MID_SB05_69847924	Striga Resistance, StrR	SNP	5	69847924	69847924	-	-		Agriplex mid density markers	AGR-MID	Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114	BTx623_NCBIv3
+S100K-SNP-SB05-069851828-NA-NA-02	AGR_MID_SB05_69851828	Striga Resistance, StrR	SNP	5	69851828	69851828	-	-		Agriplex mid density markers	AGR-MID	Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114	BTx623_NCBIv3
+S100K-SNP-SB05-069852443-NA-NA-02	AGR_MID_SB05_69852443	Striga Resistance, StrR	SNP	5	69852443	69852443	-	-		Agriplex mid density markers	AGR-MID	Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114	BTx623_NCBIv3
+S100K-SNP-SB06-002682627-NA-NA-02	AGR_MID_SB06_2682627	Sugarcane Aphid Resistance, SCAR	SNP	6	2682627	2682627	-	-		Agriplex mid density markers	AGR-MID	T. Felderhoff, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB06-002892438-NA-NA-02	AGR_MID_SB06_2892438	Sugarcane Aphid Resistance, SCAR	SNP	6	2892438	2892438	-	-		Agriplex mid density markers	AGR-MID	T. Felderhoff, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB08-000653850-NA-NA-02	AGR_MID_SB08_653850	Partial Fertility restoration gene	SNP	8	653850	653850	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB08-060934182-NA-NA-02	AGR_MID_SB08_60934182	Partial Fertility restoration gene	SNP	8	60934182	60934182	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB09-004248350-NA-NA-02	AGR_MID_SB09_4248350	Fertility restoration gene	SNP	9	4248350	4248350	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB09-046616891-NA-NA-02	AGR_MID_SB09_46616891	Fertility restoration gene	SNP	9	46616891	46616891	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB10-058031253-NA-NA-02	AGR_MID_SB10_58031253	Shoot fly resistance, Trichome density	SNP	10	58031253	58031253	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
+S100K-SNP-SB10-060919657-NA-NA-02	AGR_MID_SB10_60919657	Shoot fly resistance, Trichome density	SNP	10	60919657	60919657	-	-		Agriplex mid density markers	AGR-MID	S. Deshpande, Unpub. info.	BTx623_NCBIv3
 S100K-SNP-SB01-072079908-NA-NA	S1_72079908	Genic	SNP	1	72079908	72079908	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB01-017285880-NA-NA	S1_17285880	All	SNP	1	17285880	17285880	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB01-006038489-NA-NA	S1_6038489	Genic	SNP	1	6038489	6038489	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -2223,7 +2249,7 @@ S100K-SNP-SB02-038300258-NA-NA	S2_38300258	Genic	SNP	2	38300258	38300258	-	-	3	M
 S100K-SNP-SB02-023465949-NA-NA	S2_23465949	Genic	SNP	2	23465949	23465949	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-000388603-NA-NA	S2_388603	All	SNP	2	388603	388603	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-029003366-NA-NA	S2_29003366	Genic	SNP	2	29003366	29003366	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
-S100K-SNP-SB02-006045380-NA-NA-02	S2_6045380	Asia;EA;GB;WCA	SNP	2	6045380	6045380	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB02-006045380-NA-NA-03	S2_6045380	Asia;EA;GB;WCA	SNP	2	6045380	6045380	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-002521455-NA-NA	S2_2521455	Asia;CRCIL;EA;GB	SNP	2	2521455	2521455	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-066869287-NA-NA	S2_66869287	Genic	SNP	2	66869287	66869287	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-013711425-NA-NA	S2_13711425	Genic	SNP	2	13711425	13711425	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -2439,7 +2465,7 @@ S100K-SNP-SB02-077097741-NA-NA	S2_77097741	Genic	SNP	2	77097741	77097741	-	-	3	M
 S100K-SNP-SB02-040245595-NA-NA	S2_40245595	All	SNP	2	40245595	40245595	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-069392611-NA-NA	S2_69392611	Genic	SNP	2	69392611	69392611	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-059875932-NA-NA	S2_59875932	All	SNP	2	59875932	59875932	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB02-008715821-NA-NA-02	S2_8715821	Asia;EA;GB;WCA	SNP	2	8715821	8715821	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB02-008715821-NA-NA-03	S2_8715821	Asia;EA;GB;WCA	SNP	2	8715821	8715821	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-042579868-NA-NA	S2_42579868	Genic	SNP	2	42579868	42579868	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-075160149-NA-NA	S2_75160149	Asia;CRCIL;EA;WCA	SNP	2	75160149	75160149	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-008924878-NA-NA	S2_8924878	FT	SNP	2	8924878	8924878	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Flowering Time | EiBv2=yes	BTx623_NCBIv3
@@ -2590,7 +2616,7 @@ S100K-SNP-SB02-067127309-NA-NA	S2_67127309	Genic	SNP	2	67127309	67127309	-	-	3	M
 S100K-SNP-SB02-070531598-NA-NA	S2_70531598	All	SNP	2	70531598	70531598	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-060921531-NA-NA	S2_60921531	Asia;EA;GB	SNP	2	60921531	60921531	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-005488143-NA-NA	S2_5488143	FT	SNP	2	5488143	5488143	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Flowering Time | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB02-006843380-NA-NA-02	S2_6843380	Asia;EA;GB	SNP	2	6843380	6843380	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB02-006843380-NA-NA-03	S2_6843380	Asia;EA;GB	SNP	2	6843380	6843380	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB02-022959729-NA-NA	S2_22959729	Genic	SNP	2	22959729	22959729	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-013286293-NA-NA	S2_13286293	Genic	SNP	2	13286293	13286293	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB02-040177656-NA-NA	S2_40177656	Genic	SNP	2	40177656	40177656	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -4854,7 +4880,7 @@ S100K-SNP-SB05-020292612-NA-NA	S5_20292612	Genic	SNP	5	20292612	20292612	-	-	3	M
 S100K-SNP-SB05-018630669-NA-NA	S5_18630669	Genic	SNP	5	18630669	18630669	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-006092084-NA-NA	S5_6092084	CRCIL;GB	SNP	5	6092084	6092084	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-071606153-NA-NA	S5_71606153	All	SNP	5	71606153	71606153	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB05-069851828-NA-NA-02	S5_69851828	GB	SNP	5	69851828	69851828	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB05-069851828-NA-NA-03	S5_69851828	GB	SNP	5	69851828	69851828	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-024247155-NA-NA	S5_24247155	Genic	SNP	5	24247155	24247155	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-004754454-NA-NA	S5_4754454	All	SNP	5	4754454	4754454	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-022733768-NA-NA	S5_22733768	Genic	SNP	5	22733768	22733768	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -5155,7 +5181,7 @@ S100K-SNP-SB05-029797795-NA-NA	S5_29797795	Genic	SNP	5	29797795	29797795	-	-	3	M
 S100K-SNP-SB05-062196166-NA-NA	S5_62196166	All	SNP	5	62196166	62196166	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-066627710-NA-NA	S5_66627710	CRCIL	SNP	5	66627710	66627710	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in CRCIL only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-057995949-NA-NA	S5_57995949	All	SNP	5	57995949	57995949	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB05-069794954-NA-NA-02	S5_69794954	EA;GB	SNP	5	69794954	69794954	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB05-069794954-NA-NA-03	S5_69794954	EA;GB	SNP	5	69794954	69794954	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-063334951-NA-NA	S5_63334951	All	SNP	5	63334951	63334951	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-021895037-NA-NA	S5_21895037	Genic	SNP	5	21895037	21895037	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-011221592-NA-NA	S5_11221592	Genic	SNP	5	11221592	11221592	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -5398,7 +5424,7 @@ S100K-SNP-SB05-002270646-NA-NA	S5_2270646	Genic	SNP	5	2270646	2270646	-	-	3	Mese
 S100K-SNP-SB05-021261244-NA-NA	S5_21261244	Asia;CRCIL;EA;GB	SNP	5	21261244	21261244	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-056242524-NA-NA	S5_56242524	Genic	SNP	5	56242524	56242524	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-060450850-NA-NA	S5_60450850	All	SNP	5	60450850	60450850	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB05-069847924-NA-NA-02	S5_69847924	Asia;EA;GB;WCA	SNP	5	69847924	69847924	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB05-069847924-NA-NA-03	S5_69847924	Asia;EA;GB;WCA	SNP	5	69847924	69847924	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-054789702-NA-NA	S5_54789702	Genic	SNP	5	54789702	54789702	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-051109796-NA-NA	S5_51109796	Genic	SNP	5	51109796	51109796	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-000613995-NA-NA	S5_613995	Genic	SNP	5	613995	613995	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -5538,7 +5564,7 @@ S100K-SNP-SB05-010992142-NA-NA	S5_10992142	Genic	SNP	5	10992142	10992142	-	-	3	M
 S100K-SNP-SB05-003118829-NA-NA	S5_3118829	Genic	SNP	5	3118829	3118829	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-057776328-NA-NA	S5_57776328	Genic	SNP	5	57776328	57776328	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-058312479-NA-NA	S5_58312479	Genic	SNP	5	58312479	58312479	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
-S100K-SNP-SB05-069852443-NA-NA-02	S5_69852443	Asia;EA;GB;WCA	SNP	5	69852443	69852443	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB05-069852443-NA-NA-03	S5_69852443	Asia;EA;GB;WCA	SNP	5	69852443	69852443	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-008122385-NA-NA	S5_8122385	Genic	SNP	5	8122385	8122385	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-067744181-NA-NA	S5_67744181	CRCIL;GB	SNP	5	67744181	67744181	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-005397748-NA-NA	S5_5397748	Genic	SNP	5	5397748	5397748	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -5591,7 +5617,7 @@ S100K-SNP-SB05-016409588-NA-NA	S5_16409588	Genic	SNP	5	16409588	16409588	-	-	3	M
 S100K-SNP-SB05-041179202-NA-NA	S5_41179202	Genic	SNP	5	41179202	41179202	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-069879981-NA-NA	S5_69879981	Asia;EA;GB	SNP	5	69879981	69879981	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-008788308-NA-NA	S5_8788308	All	SNP	5	8788308	8788308	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB05-000838874-NA-NA-02	S5_838874	GB	SNP	5	838874	838874	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB05-000838874-NA-NA-03	S5_838874	GB	SNP	5	838874	838874	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-002694515-NA-NA	S5_2694515	Hybrid Prediction (US)	SNP	5	2694515	2694515	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Hybrid Prediction (US) Medium | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB05-001375985-NA-NA	S5_1375985	Asia;CRCIL;GB;WCA	SNP	5	1375985	1375985	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB05-042954238-NA-NA	S5_42954238	Asia;CRCIL;EA;GB	SNP	5	42954238	42954238	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
@@ -5658,7 +5684,7 @@ S100K-SNP-SB06-033548829-NA-NA	S6_33548829	Genic	SNP	6	33548829	33548829	-	-	3	M
 S100K-SNP-SB06-030982177-NA-NA	S6_30982177	All	SNP	6	30982177	30982177	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB06-054933147-NA-NA	S6_54933147	Genic	SNP	6	54933147	54933147	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB06-043672535-NA-NA	S6_43672535	All	SNP	6	43672535	43672535	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB06-002682627-NA-NA-02	S6_2682627	Asia;EA;GB;WCA	SNP	6	2682627	2682627	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB06-002682627-NA-NA-03	S6_2682627	Asia;EA;GB;WCA	SNP	6	2682627	2682627	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB06-052581976-NA-NA	S6_52581976	Genic	SNP	6	52581976	52581976	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB06-030653595-NA-NA	S6_30653595	Genic	SNP	6	30653595	30653595	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB06-058512060-NA-NA	S6_58512060	FT	SNP	6	58512060	58512060	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Flowering Time | EiBv2=yes	BTx623_NCBIv3
@@ -7498,7 +7524,7 @@ S100K-SNP-SB08-011565111-NA-NA	S8_11565111	Genic	SNP	8	11565111	11565111	-	-	3	M
 S100K-SNP-SB08-006073370-NA-NA	S8_6073370	Hybrid Prediction (US)	SNP	8	6073370	6073370	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Hybrid Prediction (US) Low | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB08-006483107-NA-NA	S8_6483107	Genic	SNP	8	6483107	6483107	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB08-052741657-NA-NA	S8_52741657	Genic	SNP	8	52741657	52741657	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
-S100K-SNP-SB08-060934182-NA-NA-02	S8_60934182	Asia;EA;WCA	SNP	8	60934182	60934182	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB08-060934182-NA-NA-03	S8_60934182	Asia;EA;WCA	SNP	8	60934182	60934182	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-001839095-NA-NA	S8_1839095	Asia;CRCIL;EA;GB	SNP	8	1839095	1839095	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-006381953-NA-NA	S8_6381953	CRCIL	SNP	8	6381953	6381953	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in CRCIL only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-003613568-NA-NA	S8_3613568	Genic	SNP	8	3613568	3613568	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -7878,7 +7904,7 @@ S100K-SNP-SB08-002330364-NA-NA	S8_2330364	Hybrid Prediction (US)	SNP	8	2330364	2
 S100K-SNP-SB08-015936480-NA-NA	S8_15936480	All	SNP	8	15936480	15936480	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-025544353-NA-NA	S8_25544353	Genic	SNP	8	25544353	25544353	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB08-001037980-NA-NA	S8_1037980	Asia;EA;GB;WCA	SNP	8	1037980	1037980	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
-S100K-SNP-SB08-000653850-NA-NA-02	S8_653850	Asia;EA;GB;WCA	SNP	8	653850	653850	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB08-000653850-NA-NA-03	S8_653850	Asia;EA;GB;WCA	SNP	8	653850	653850	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-045237438-NA-NA	S8_45237438	All	SNP	8	45237438	45237438	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB08-034322873-NA-NA	S8_34322873	Genic	SNP	8	34322873	34322873	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB08-060829895-NA-NA	S8_60829895	All	SNP	8	60829895	60829895	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
@@ -7993,7 +8019,7 @@ S100K-SNP-SB09-052309316-NA-NA	S9_52309316	Genic	SNP	9	52309316	52309316	-	-	3	M
 S100K-SNP-SB09-055400160-NA-NA	S9_55400160	Genic	SNP	9	55400160	55400160	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB09-003164030-NA-NA	S9_3164030	CRCIL;EA;GB;WCA	SNP	9	3164030	3164030	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB09-046791987-NA-NA	S9_46791987	Genic	SNP	9	46791987	46791987	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
-S100K-SNP-SB09-046616891-NA-NA-02	S9_46616891	Asia;EA;GB;WCA	SNP	9	46616891	46616891	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB09-046616891-NA-NA-03	S9_46616891	Asia;EA;GB;WCA	SNP	9	46616891	46616891	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB09-052983179-NA-NA	S9_52983179	All	SNP	9	52983179	52983179	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB09-031712738-NA-NA	S9_31712738	Genic	SNP	9	31712738	31712738	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB09-047469397-NA-NA	S9_47469397	Genic	SNP	9	47469397	47469397	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
@@ -8106,7 +8132,7 @@ S100K-SNP-SB09-014294089-NA-NA	S9_14294089	Genic	SNP	9	14294089	14294089	-	-	3	M
 S100K-SNP-SB09-010120854-NA-NA	S9_10120854	Hybrid Prediction (US)	SNP	9	10120854	10120854	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Hybrid Prediction (US) Low | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB09-056572710-NA-NA	S9_56572710	Asia;CRCIL;GB	SNP	9	56572710	56572710	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in at least one of ICRISAT geromplasm and CRCIL | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB09-004045483-NA-NA	S9_4045483	Genic	SNP	9	4045483	4045483	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
-S100K-SNP-SB09-004248350-NA-NA-02	S9_4248350	Asia;EA;WCA	SNP	9	4248350	4248350	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
+S100K-SNP-SB09-004248350-NA-NA-03	S9_4248350	Asia;EA;WCA	SNP	9	4248350	4248350	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes	BTx623_NCBIv3
 S100K-SNP-SB09-034061861-NA-NA	S9_34061861	Genic	SNP	9	34061861	34061861	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB09-022108710-NA-NA	S9_22108710	Genic	SNP	9	22108710	22108710	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no	BTx623_NCBIv3
 S100K-SNP-SB09-052381116-NA-NA	S9_52381116	All	SNP	9	52381116	52381116	-	-	3	Meseret/BI	MES-BI	100K SNP array panel design | Polymorphic in ICRISAT and CRCIL | EiBv2=yes	BTx623_NCBIv3

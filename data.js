@@ -6734,6 +6734,474 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-006045380-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-001",
+      "locus": "AGR_MID_SB02_6045380",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_6045380",
+      "posEnd": 6045380,
+      "posStart": 6045380,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-006843380-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-002",
+      "locus": "AGR_MID_SB02_6843380",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_6843380",
+      "posEnd": 6843380,
+      "posStart": 6843380,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-008715821-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-003",
+      "locus": "AGR_MID_SB02_8715821",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_8715821",
+      "posEnd": 8715821,
+      "posStart": 8715821,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-059000770-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-004",
+      "locus": "AGR_MID_SB02_59000770",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_59000770",
+      "posEnd": 59000770,
+      "posStart": 59000770,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-059821923-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-005",
+      "locus": "AGR_MID_SB02_59821923",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_59821923",
+      "posEnd": 59821923,
+      "posStart": 59821923,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-060098184-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-006",
+      "locus": "AGR_MID_SB02_60098184",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_60098184",
+      "posEnd": 60098184,
+      "posStart": 60098184,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-061811307-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-007",
+      "locus": "AGR_MID_SB02_61811307",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_61811307",
+      "posEnd": 61811307,
+      "posStart": 61811307,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance/Fertility restoration"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-067306935-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-008",
+      "locus": "AGR_MID_SB02_67306935",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_67306935",
+      "posEnd": 67306935,
+      "posStart": 67306935,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-067710384-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-009",
+      "locus": "AGR_MID_SB02_67710384",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_67710384",
+      "posEnd": 67710384,
+      "posStart": 67710384,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB02-071419274-NA-NA-02",
+      "chrom": "2",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-010",
+      "locus": "AGR_MID_SB02_71419274",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB02_71419274",
+      "posEnd": 71419274,
+      "posStart": 71419274,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Post-flowering Drought tolerance"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB03-030310883-NA-NA-02",
+      "chrom": "3",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-011",
+      "locus": "AGR_MID_SB03_30310883",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB03_30310883",
+      "posEnd": 30310883,
+      "posStart": 30310883,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB04-000364279-NA-NA-02",
+      "chrom": "4",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-012",
+      "locus": "AGR_MID_SB04_364279",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB04_364279",
+      "posEnd": 364279,
+      "posStart": 364279,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-000838874-NA-NA-02",
+      "chrom": "5",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-013",
+      "locus": "AGR_MID_SB05_838874",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_838874",
+      "posEnd": 838874,
+      "posStart": 838874,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Shoot fly resistance, Leaf Glossiness"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-001608322-NA-NA-02",
+      "chrom": "5",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-014",
+      "locus": "AGR_MID_SB05_1608322",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_1608322",
+      "posEnd": 1608322,
+      "posStart": 1608322,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-069794954-NA-NA-02",
+      "chrom": "5",
+      "evidence": "Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-015",
+      "locus": "AGR_MID_SB05_69794954",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_69794954",
+      "posEnd": 69794954,
+      "posStart": 69794954,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Striga Resistance, StrR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-069847924-NA-NA-02",
+      "chrom": "5",
+      "evidence": "Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-016",
+      "locus": "AGR_MID_SB05_69847924",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_69847924",
+      "posEnd": 69847924,
+      "posStart": 69847924,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Striga Resistance, StrR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-069851828-NA-NA-02",
+      "chrom": "5",
+      "evidence": "Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-017",
+      "locus": "AGR_MID_SB05_69851828",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_69851828",
+      "posEnd": 69851828,
+      "posStart": 69851828,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Striga Resistance, StrR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB05-069852443-NA-NA-02",
+      "chrom": "5",
+      "evidence": "Gobena et al. (2017) PNAS, 114(17): 4471-4476, https://doi.org/10.1073/pnas.1618965114",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-018",
+      "locus": "AGR_MID_SB05_69852443",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB05_69852443",
+      "posEnd": 69852443,
+      "posStart": 69852443,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Striga Resistance, StrR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB06-002682627-NA-NA-02",
+      "chrom": "6",
+      "evidence": "T. Felderhoff, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-019",
+      "locus": "AGR_MID_SB06_2682627",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB06_2682627",
+      "posEnd": 2682627,
+      "posStart": 2682627,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Sugarcane Aphid Resistance, SCAR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB06-002892438-NA-NA-02",
+      "chrom": "6",
+      "evidence": "T. Felderhoff, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-020",
+      "locus": "AGR_MID_SB06_2892438",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB06_2892438",
+      "posEnd": 2892438,
+      "posStart": 2892438,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Sugarcane Aphid Resistance, SCAR"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB08-000653850-NA-NA-02",
+      "chrom": "8",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-021",
+      "locus": "AGR_MID_SB08_653850",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB08_653850",
+      "posEnd": 653850,
+      "posStart": 653850,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Partial Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB08-060934182-NA-NA-02",
+      "chrom": "8",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-022",
+      "locus": "AGR_MID_SB08_60934182",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB08_60934182",
+      "posEnd": 60934182,
+      "posStart": 60934182,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Partial Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB09-004248350-NA-NA-02",
+      "chrom": "9",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-023",
+      "locus": "AGR_MID_SB09_4248350",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB09_4248350",
+      "posEnd": 4248350,
+      "posStart": 4248350,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB09-046616891-NA-NA-02",
+      "chrom": "9",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-024",
+      "locus": "AGR_MID_SB09_46616891",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB09_46616891",
+      "posEnd": 46616891,
+      "posStart": 46616891,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Fertility restoration gene"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB10-058031253-NA-NA-02",
+      "chrom": "10",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-025",
+      "locus": "AGR_MID_SB10_58031253",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB10_58031253",
+      "posEnd": 58031253,
+      "posStart": 58031253,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Shoot fly resistance, Trichome density"
+    },
+    {
+      "alt": "-",
+      "canonicalId": "S100K-SNP-SB10-060919657-NA-NA-02",
+      "chrom": "10",
+      "evidence": "S. Deshpande, Unpub. info.",
+      "genomeVersion": "BTx623_NCBIv3",
+      "index": "AGR-MID-026",
+      "locus": "AGR_MID_SB10_60919657",
+      "markerType": "SNP",
+      "originalName": "AGR_MID_SB10_60919657",
+      "posEnd": 60919657,
+      "posStart": 60919657,
+      "priority": "",
+      "ref": "-",
+      "source": "Agriplex mid density markers",
+      "sourceCode": "AGR-MID",
+      "trait": "Shoot fly resistance, Trichome density"
+    },
+    {
+      "alt": "-",
       "canonicalId": "S100K-SNP-SB01-072079908-NA-NA",
       "chrom": "1",
       "evidence": "100K SNP array panel design | Filler Markers from the Genic Region | EiBv2=no",
@@ -39638,7 +40106,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB02-006045380-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB02-006045380-NA-NA-03",
       "chrom": "2",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -43526,7 +43994,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB02-008715821-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB02-008715821-NA-NA-03",
       "chrom": "2",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -46244,7 +46712,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB02-006843380-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB02-006843380-NA-NA-03",
       "chrom": "2",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -86996,7 +87464,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB05-069851828-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB05-069851828-NA-NA-03",
       "chrom": "5",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -92414,7 +92882,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB05-069794954-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB05-069794954-NA-NA-03",
       "chrom": "5",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -96788,7 +97256,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB05-069847924-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB05-069847924-NA-NA-03",
       "chrom": "5",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -99308,7 +99776,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB05-069852443-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB05-069852443-NA-NA-03",
       "chrom": "5",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -100262,7 +100730,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB05-000838874-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB05-000838874-NA-NA-03",
       "chrom": "5",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -101468,7 +101936,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB06-002682627-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB06-002682627-NA-NA-03",
       "chrom": "6",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -134588,7 +135056,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB08-060934182-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB08-060934182-NA-NA-03",
       "chrom": "8",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -141428,7 +141896,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB08-000653850-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB08-000653850-NA-NA-03",
       "chrom": "8",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -143498,7 +143966,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB09-046616891-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB09-046616891-NA-NA-03",
       "chrom": "9",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -145532,7 +146000,7 @@ window.MARKER_DASHBOARD_DATA = {
     },
     {
       "alt": "-",
-      "canonicalId": "S100K-SNP-SB09-004248350-NA-NA-02",
+      "canonicalId": "S100K-SNP-SB09-004248350-NA-NA-03",
       "chrom": "9",
       "evidence": "100K SNP array panel design | Polymorphic  in ICRISAT only | EiBv2=yes",
       "genomeVersion": "BTx623_NCBIv3",
@@ -170891,23 +171359,23 @@ window.MARKER_DASHBOARD_DATA = {
       "name": "1"
     },
     {
-      "count": 1147,
+      "count": 1157,
       "name": "2"
     },
     {
-      "count": 1147,
+      "count": 1148,
       "name": "3"
     },
     {
-      "count": 982,
+      "count": 983,
       "name": "4"
     },
     {
-      "count": 934,
+      "count": 940,
       "name": "5"
     },
     {
-      "count": 853,
+      "count": 855,
       "name": "6"
     },
     {
@@ -170915,15 +171383,15 @@ window.MARKER_DASHBOARD_DATA = {
       "name": "7"
     },
     {
-      "count": 812,
+      "count": 814,
       "name": "10"
     },
     {
-      "count": 804,
+      "count": 806,
       "name": "9"
     },
     {
-      "count": 785,
+      "count": 787,
       "name": "8"
     },
     {
@@ -170987,6 +171455,14 @@ window.MARKER_DASHBOARD_DATA = {
       "focus": "Trait-linked SNP panel",
       "institution": "ICRISAT / Industry",
       "source": "EIB/AgriPlex"
+    },
+    {
+      "catalogScope": "curated catalog",
+      "collaborator": "Agriplex mid density markers",
+      "count": 26,
+      "focus": "Mid-density trait-linked SNP panel",
+      "institution": "ICRISAT / EiB",
+      "source": "Agriplex mid density markers"
     },
     {
       "catalogScope": "curated catalog",
@@ -171277,6 +171753,7 @@ window.MARKER_DASHBOARD_DATA = {
   ],
   "generatedFrom": [
     "marker_catalog_304_corrected.tsv",
+    "marker_list/agriplex_trait_linked_snps.tsv.txt",
     "Meseret_Wondifraw_BI/Sorghum_Panel_Shared.xlsb",
     "marker_extraction_report.md",
     "results/summary_region_class.tsv",
@@ -171285,7 +171762,7 @@ window.MARKER_DASHBOARD_DATA = {
   ],
   "markerTypeCounts": [
     {
-      "count": 9388,
+      "count": 9414,
       "name": "SNP"
     },
     {
@@ -171309,6 +171786,10 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 41,
       "name": "4"
+    },
+    {
+      "count": 26,
+      "name": "Unspecified"
     },
     {
       "count": 7,
@@ -171338,11 +171819,12 @@ window.MARKER_DASHBOARD_DATA = {
     }
   ],
   "totals": {
+    "agriplexMidDensityMarkers": 26,
     "arrayPanelMarkers": 9115,
     "chromosomes": 10,
-    "collaborators": 15,
+    "collaborators": 16,
     "curatedMarkers": 396,
-    "totalMarkers": 9511
+    "totalMarkers": 9537
   },
   "traitCounts": [
     {
@@ -171458,6 +171940,10 @@ window.MARKER_DASHBOARD_DATA = {
       "name": "Maturity"
     },
     {
+      "count": 12,
+      "name": "Fertility restoration"
+    },
+    {
       "count": 11,
       "name": "Panicle width"
     },
@@ -171476,10 +171962,6 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 9,
       "name": "CRCIL;GB;WCA"
-    },
-    {
-      "count": 8,
-      "name": "Fertility restoration"
     },
     {
       "count": 8,
@@ -171512,6 +171994,10 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 6,
       "name": "Drought response"
+    },
+    {
+      "count": 6,
+      "name": "Post-flowering Drought tolerance"
     },
     {
       "count": 6,
@@ -171564,6 +172050,14 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 4,
       "name": "Fresh shoot weight"
+    },
+    {
+      "count": 4,
+      "name": "Fertility restoration gene"
+    },
+    {
+      "count": 4,
+      "name": "Striga Resistance, StrR"
     },
     {
       "count": 4,
@@ -171648,6 +172142,18 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 2,
       "name": "Nodal root length"
+    },
+    {
+      "count": 2,
+      "name": "Sugarcane Aphid Resistance, SCAR"
+    },
+    {
+      "count": 2,
+      "name": "Partial Fertility restoration gene"
+    },
+    {
+      "count": 2,
+      "name": "Shoot fly resistance, Trichome density"
     },
     {
       "count": 2,
@@ -171740,6 +172246,14 @@ window.MARKER_DASHBOARD_DATA = {
     {
       "count": 1,
       "name": "Leaf area"
+    },
+    {
+      "count": 1,
+      "name": "Post-flowering Drought tolerance/Fertility restoration"
+    },
+    {
+      "count": 1,
+      "name": "Shoot fly resistance, Leaf Glossiness"
     },
     {
       "count": 1,
