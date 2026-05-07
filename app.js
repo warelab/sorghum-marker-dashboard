@@ -22,6 +22,7 @@ const feedbackFormConfig = window.FEEDBACK_FORM_CONFIG || {
 const els = {
   totalMarkers: document.querySelector("#totalMarkers"),
   curatedMarkers: document.querySelector("#curatedMarkers"),
+  agriplexMidDensityMarkers: document.querySelector("#agriplexMidDensityMarkers"),
   arrayPanelMarkers: document.querySelector("#arrayPanelMarkers"),
   collaborators: document.querySelector("#collaborators"),
   dataSourceCount: document.querySelector("#dataSourceCount"),
@@ -682,6 +683,7 @@ function bindEvents() {
 function init() {
   els.totalMarkers.textContent = format.format(data.totals.totalMarkers);
   els.curatedMarkers.textContent = format.format(data.totals.curatedMarkers);
+  els.agriplexMidDensityMarkers.textContent = format.format(data.totals.agriplexMidDensityMarkers || 0);
   els.arrayPanelMarkers.textContent = format.format(data.totals.arrayPanelMarkers);
   els.collaborators.textContent = format.format(data.totals.collaborators);
   els.dataSourceCount.textContent = `${data.generatedFrom.length} sources`;
