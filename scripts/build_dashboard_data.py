@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
 MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
+AGRIPLEX_MID_DENSITY = ROOT / "marker_list" / "agriplex_trait_linked_snps.tsv.txt"
 
 
 COLLABORATOR_META = {
@@ -38,6 +39,11 @@ COLLABORATOR_META = {
         "display": "EIB/AgriPlex",
         "institution": "ICRISAT / Industry",
         "focus": "Trait-linked SNP panel",
+    },
+    "Agriplex mid density markers": {
+        "display": "Agriplex mid density markers",
+        "institution": "ICRISAT / EiB",
+        "focus": "Mid-density trait-linked SNP panel",
     },
     "Fattel/Clemson": {
         "display": "Leila Fattel",
@@ -102,6 +108,7 @@ SOURCE_CODES = {
     "Behera/AAU": "BEH-AAU",
     "Tuinstra/Purdue": "TUI-PUR",
     "EIB/AgriPlex": "EIB-AGR",
+    "Agriplex mid density markers": "AGR-MID",
     "Fattel/Clemson": "FAT-CLE",
     "Tadesse/USDA": "TAD-USDA",
     "ICRISAT/EiB": "ODE-ICR",
@@ -310,6 +317,43 @@ def read_meseret_panel() -> list[dict[str, object]]:
     return rows
 
 
+def read_agriplex_mid_density() -> list[dict[str, object]]:
+    if not AGRIPLEX_MID_DENSITY.exists():
+        return []
+
+    rows: list[dict[str, object]] = []
+    with AGRIPLEX_MID_DENSITY.open(newline="", encoding="utf-8-sig") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for i, raw in enumerate(reader, start=1):
+            chrom = normalize_chrom(raw.get("Chr"))
+            pos = clean_int(str(raw.get("Pos (bp)") or ""))
+            trait = str(raw.get("Trait") or "").strip() or "Trait-linked SNP"
+            evidence = str(raw.get("EIB’s Source") or raw.get("EIB's Source") or "").strip()
+
+            if chrom == "-" or pos is None:
+                continue
+
+            rows.append(
+                {
+                    "index": f"AGR-MID-{i:03d}",
+                    "trait": trait,
+                    "locus": f"AGR_MID_SB{int(chrom):02d}_{pos}" if chrom.isdigit() else f"AGR_MID_{chrom}_{pos}",
+                    "chrom": chrom,
+                    "posStart": pos,
+                    "posEnd": pos,
+                    "ref": "-",
+                    "alt": "-",
+                    "evidence": evidence,
+                    "priority": "",
+                    "source": "Agriplex mid density markers",
+                    "markerType": "SNP",
+                    "genomeVersion": "BTx623_NCBIv3",
+                }
+            )
+
+    return rows
+
+
 def read_summary(path: str) -> list[dict[str, object]]:
     with (ROOT / path).open(newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
@@ -364,8 +408,9 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
 
 def main() -> None:
     curated_catalog = read_catalog()
+    agriplex_mid_density_catalog = read_agriplex_mid_density()
     meseret_catalog = read_meseret_panel()
-    catalog = curated_catalog + meseret_catalog
+    catalog = curated_catalog + agriplex_mid_density_catalog + meseret_catalog
     add_canonical_ids(catalog)
     write_normalized_catalog(catalog)
     region_summary = read_summary("results/summary_region_class.tsv")
@@ -375,6 +420,7 @@ def main() -> None:
     payload = {
         "generatedFrom": [
             "marker_catalog_304_corrected.tsv",
+            "marker_list/agriplex_trait_linked_snps.tsv.txt",
             "Meseret_Wondifraw_BI/Sorghum_Panel_Shared.xlsb",
             "marker_extraction_report.md",
             "results/summary_region_class.tsv",
@@ -383,9 +429,10 @@ def main() -> None:
         ],
         "totals": {
             "curatedMarkers": len(curated_catalog),
+            "agriplexMidDensityMarkers": len(agriplex_mid_density_catalog),
             "arrayPanelMarkers": len(meseret_catalog),
             "totalMarkers": len(catalog),
-            "collaborators": 15,
+            "collaborators": len({row["source"] for row in catalog if row.get("source")}),
             "chromosomes": len({row["chrom"] for row in catalog if row.get("chrom") and row["chrom"] != "-"}),
         },
         "catalog": catalog,

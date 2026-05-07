@@ -46,6 +46,7 @@ S100K-<CLASS>-<CHROMOSOME>-<POSITION_OR_INTERVAL>-<ALLELES_IF_SNP>
 | `Behera/AAU` | `BEH-AAU` |
 | `Tuinstra/Purdue` | `TUI-PUR` |
 | `EIB/AgriPlex` | `EIB-AGR` |
+| `Agriplex mid density markers` | `AGR-MID` |
 | `Fattel/Clemson` | `FAT-CLE` |
 | `Tadesse/USDA` | `TAD-USDA` |
 | `ICRISAT/EiB` | `ODE-ICR` |
