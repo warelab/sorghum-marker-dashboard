@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
 MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
-AGRIPLEX_MID_DENSITY = ROOT / "marker_list" / "agriplex_trait_linked_snps.tsv.txt"
+AGRIPLEX_MID_DENSITY_VCF = ROOT / "marker_list" / "2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf"
 
 
 COLLABORATOR_META = {
@@ -318,32 +318,42 @@ def read_meseret_panel() -> list[dict[str, object]]:
 
 
 def read_agriplex_mid_density() -> list[dict[str, object]]:
-    if not AGRIPLEX_MID_DENSITY.exists():
+    if not AGRIPLEX_MID_DENSITY_VCF.exists():
         return []
 
     rows: list[dict[str, object]] = []
-    with AGRIPLEX_MID_DENSITY.open(newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle, delimiter="\t")
-        for i, raw in enumerate(reader, start=1):
-            chrom = normalize_chrom(raw.get("Chr"))
-            pos = clean_int(str(raw.get("Pos (bp)") or ""))
-            trait = str(raw.get("Trait") or "").strip() or "Trait-linked SNP"
-            evidence = str(raw.get("EIB’s Source") or raw.get("EIB's Source") or "").strip()
+    with AGRIPLEX_MID_DENSITY_VCF.open(newline="", encoding="utf-8-sig") as handle:
+        variant_index = 0
+        for line in handle:
+            if line.startswith("#"):
+                continue
+
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) < 5:
+                continue
+
+            chrom = normalize_chrom(fields[0])
+            pos = clean_int(fields[1])
+            marker_id = fields[2].strip()
+            ref = clean_allele(fields[3])
+            alt = clean_allele(fields[4])
 
             if chrom == "-" or pos is None:
                 continue
 
+            variant_index += 1
+            default_locus = f"AGR_MID_SB{int(chrom):02d}_{pos}" if chrom.isdigit() else f"AGR_MID_{chrom}_{pos}"
             rows.append(
                 {
-                    "index": f"AGR-MID-{i:03d}",
-                    "trait": trait,
-                    "locus": f"AGR_MID_SB{int(chrom):02d}_{pos}" if chrom.isdigit() else f"AGR_MID_{chrom}_{pos}",
+                    "index": f"AGR-MID-{variant_index:04d}",
+                    "trait": "Agriplex mid density markers",
+                    "locus": marker_id or default_locus,
                     "chrom": chrom,
                     "posStart": pos,
                     "posEnd": pos,
-                    "ref": "-",
-                    "alt": "-",
-                    "evidence": evidence,
+                    "ref": ref,
+                    "alt": alt,
+                    "evidence": "2023 CSHL SAP 397-sample VCF",
                     "priority": "",
                     "source": "Agriplex mid density markers",
                     "markerType": "SNP",
@@ -401,9 +411,9 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
         "genomeVersion",
     ]
     with NORMALIZED_OUT.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
-        writer.writerows(catalog)
+        writer.writerows({field: row.get(field) or "-" for field in fields} for row in catalog)
 
 
 def main() -> None:
@@ -420,7 +430,7 @@ def main() -> None:
     payload = {
         "generatedFrom": [
             "marker_catalog_304_corrected.tsv",
-            "marker_list/agriplex_trait_linked_snps.tsv.txt",
+            "marker_list/2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf",
             "Meseret_Wondifraw_BI/Sorghum_Panel_Shared.xlsb",
             "marker_extraction_report.md",
             "results/summary_region_class.tsv",
