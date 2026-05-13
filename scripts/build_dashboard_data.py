@@ -17,6 +17,7 @@ OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
 MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
 AGRIPLEX_MID_DENSITY_VCF = ROOT / "marker_list" / "2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf"
+MURAL_ETAL_UB_MARKERS = ROOT / "Ravi_Mural" / "Marker_Array_Design_Final.csv"
 
 
 COLLABORATOR_META = {
@@ -100,6 +101,11 @@ COLLABORATOR_META = {
         "institution": "ICRISAT / Bioversity International",
         "focus": "100K SNP array panel design",
     },
+    "Mural_etal_UB": {
+        "display": "Mural et al. UB",
+        "institution": "University of Bonn",
+        "focus": "High-quality GWAS marker set",
+    },
 }
 
 
@@ -120,6 +126,7 @@ SOURCE_CODES = {
     "Enyew/WSU": "ENY-WSU",
     "Jura/SbMATE": "JUR-SBM",
     "Meseret/BI": "MES-BI",
+    "Mural_etal_UB": "MUR-UB",
 }
 
 SOURCE_ALIASES = {
@@ -364,6 +371,67 @@ def read_agriplex_mid_density() -> list[dict[str, object]]:
     return rows
 
 
+def read_mural_etal_ub_markers() -> list[dict[str, object]]:
+    if not MURAL_ETAL_UB_MARKERS.exists():
+        return []
+
+    rows: list[dict[str, object]] = []
+    with MURAL_ETAL_UB_MARKERS.open(newline="", encoding="utf-8-sig") as handle:
+        reader = csv.DictReader(handle)
+        for i, raw in enumerate(reader, start=1):
+            chrom = normalize_chrom(raw.get("CHROM"))
+            pos = clean_int(str(raw.get("POS") or ""))
+            marker_id = str(raw.get("Marker_ID") or raw.get("SNP") or "").strip()
+            trait = str(raw.get("Trait") or "").strip() or "Agriplex mid density markers"
+
+            if chrom == "-" or pos is None:
+                continue
+
+            evidence_bits = ["Agriplex mid density markers"]
+            method = str(raw.get("Method") or "").strip()
+            support = str(raw.get("Method_Support") or "").strip()
+            quality = str(raw.get("Quality_Tier") or raw.get("Quality_Class") or "").strip()
+            pvalue = str(raw.get("Pvalue") or "").strip()
+            best_log10p = str(raw.get("Best_log10P") or raw.get("Neg_log10pvalue") or "").strip()
+            effect = str(raw.get("Effect") or "").strip()
+
+            if method:
+                evidence_bits.append(f"Method={method}")
+            if support:
+                evidence_bits.append(f"Method_Support={support}")
+            if quality:
+                evidence_bits.append(f"Quality={quality}")
+            if pvalue:
+                evidence_bits.append(f"P={pvalue}")
+            if best_log10p:
+                evidence_bits.append(f"Best_log10P={best_log10p}")
+            if effect:
+                evidence_bits.append(f"Effect={effect}")
+
+            priority = "1" if quality == "Tier1_All3Methods" else "2" if quality == "Tier2_TwoMethods" else "3"
+
+            default_locus = f"MUR_UB_SB{int(chrom):02d}_{pos}" if chrom.isdigit() else f"MUR_UB_{chrom}_{pos}"
+            rows.append(
+                {
+                    "index": f"MUR-UB-{i:04d}",
+                    "trait": trait,
+                    "locus": marker_id or default_locus,
+                    "chrom": chrom,
+                    "posStart": pos,
+                    "posEnd": pos,
+                    "ref": "-",
+                    "alt": "-",
+                    "evidence": " | ".join(evidence_bits),
+                    "priority": priority,
+                    "source": "Mural_etal_UB",
+                    "markerType": "SNP",
+                    "genomeVersion": "BTx623_NCBIv3",
+                }
+            )
+
+    return rows
+
+
 def read_summary(path: str) -> list[dict[str, object]]:
     with (ROOT / path).open(newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
@@ -419,8 +487,9 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
 def main() -> None:
     curated_catalog = read_catalog()
     agriplex_mid_density_catalog = read_agriplex_mid_density()
+    mural_etal_ub_catalog = read_mural_etal_ub_markers()
     meseret_catalog = read_meseret_panel()
-    catalog = curated_catalog + agriplex_mid_density_catalog + meseret_catalog
+    catalog = curated_catalog + agriplex_mid_density_catalog + mural_etal_ub_catalog + meseret_catalog
     add_canonical_ids(catalog)
     write_normalized_catalog(catalog)
     region_summary = read_summary("results/summary_region_class.tsv")
@@ -431,6 +500,7 @@ def main() -> None:
         "generatedFrom": [
             "marker_catalog_304_corrected.tsv",
             "marker_list/2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf",
+            "Ravi_Mural/Marker_Array_Design_Final.csv",
             "Meseret_Wondifraw_BI/Sorghum_Panel_Shared.xlsb",
             "marker_extraction_report.md",
             "results/summary_region_class.tsv",
@@ -440,6 +510,7 @@ def main() -> None:
         "totals": {
             "curatedMarkers": len(curated_catalog),
             "agriplexMidDensityMarkers": len(agriplex_mid_density_catalog),
+            "muralEtalUbMarkers": len(mural_etal_ub_catalog),
             "arrayPanelMarkers": len(meseret_catalog),
             "totalMarkers": len(catalog),
             "collaborators": len({row["source"] for row in catalog if row.get("source")}),
