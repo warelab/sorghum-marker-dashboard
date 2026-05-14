@@ -15,6 +15,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
+UPDATED_NORMALIZED_IN = ROOT / "dashboard" / "normalized_marker_catalog_updated.tsv"
 MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
 AGRIPLEX_MID_DENSITY_VCF = ROOT / "marker_list" / "2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf"
 MURAL_ETAL_UB_MARKERS = ROOT / "Ravi_Mural" / "Marker_Array_Design_Final.csv"
@@ -101,10 +102,20 @@ COLLABORATOR_META = {
         "institution": "ICRISAT / Bioversity International",
         "focus": "100K SNP array panel design",
     },
+    "BI/ICRISAT": {
+        "display": "BI/ICRISAT",
+        "institution": "Bioversity International / ICRISAT",
+        "focus": "100K SNP array panel design",
+    },
     "Mural_etal_UB": {
         "display": "Mural et al. UB",
         "institution": "University of Bonn",
         "focus": "High-quality GWAS marker set",
+    },
+    "AAU-SLU Biotech/Sida": {
+        "display": "AAU-SLU Biotech/Sida",
+        "institution": "AAU / SLU / Sida",
+        "focus": "Agronomic trait GWAS markers",
     },
 }
 
@@ -126,7 +137,9 @@ SOURCE_CODES = {
     "Enyew/WSU": "ENY-WSU",
     "Jura/SbMATE": "JUR-SBM",
     "Meseret/BI": "MES-BI",
+    "BI/ICRISAT": "BI-ICRISAT",
     "Mural_etal_UB": "MUR-UB",
+    "AAU-SLU Biotech/Sida": "AAU-SLU",
 }
 
 SOURCE_ALIASES = {
@@ -274,6 +287,45 @@ def read_catalog() -> list[dict[str, object]]:
             if row:
                 rows.append(row)
     add_canonical_ids(rows)
+    return rows
+
+
+def read_normalized_catalog(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+
+    rows: list[dict[str, object]] = []
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for raw in reader:
+            source = normalize_source(raw.get("source") or "Unspecified")
+            row: dict[str, object] = {
+                "canonicalId": str(raw.get("canonicalId") or "").strip(),
+                "originalName": str(raw.get("originalName") or raw.get("locus") or "").strip(),
+                "trait": str(raw.get("trait") or "").strip() or "Unspecified",
+                "markerType": str(raw.get("markerType") or "").strip() or "Unspecified",
+                "chrom": normalize_chrom(raw.get("chrom") or "-"),
+                "posStart": clean_int(str(raw.get("posStart") or "")),
+                "posEnd": clean_int(str(raw.get("posEnd") or "")),
+                "ref": str(raw.get("ref") or "-").strip() or "-",
+                "alt": str(raw.get("alt") or "-").strip() or "-",
+                "priority": str(raw.get("priority") or "").strip(),
+                "source": source,
+                "sourceCode": str(raw.get("sourceCode") or "").strip() or source_code(source),
+                "evidence": str(raw.get("evidence") or "").strip(),
+                "genomeVersion": str(raw.get("genomeVersion") or "BTx623_NCBIv3").strip(),
+            }
+            row["locus"] = row["originalName"]
+            if not row["canonicalId"]:
+                row["canonicalId"] = canonical_id(row, len(rows) + 1)
+            rows.append(row)
+
+    seen: Counter[str] = Counter()
+    for row in rows:
+        canonical = str(row.get("canonicalId") or "")
+        seen[canonical] += 1
+        if seen[canonical] > 1:
+            row["canonicalId"] = f"{canonical}-{seen[canonical]:02d}"
     return rows
 
 
@@ -485,19 +537,31 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
 
 
 def main() -> None:
-    curated_catalog = read_catalog()
-    agriplex_mid_density_catalog = read_agriplex_mid_density()
-    mural_etal_ub_catalog = read_mural_etal_ub_markers()
-    meseret_catalog = read_meseret_panel()
-    catalog = curated_catalog + agriplex_mid_density_catalog + mural_etal_ub_catalog + meseret_catalog
-    add_canonical_ids(catalog)
-    write_normalized_catalog(catalog)
-    region_summary = read_summary("results/summary_region_class.tsv")
-    chromosome_annotation = read_summary("results/summary_per_chromosome.tsv")
-    dense_genes = read_summary("results/summary_per_gene.tsv")[:20]
-
-    payload = {
-        "generatedFrom": [
+    updated_catalog = read_normalized_catalog(UPDATED_NORMALIZED_IN)
+    if updated_catalog:
+        catalog = updated_catalog
+        agriplex_mid_density_catalog = [r for r in catalog if str(r.get("source") or "") == "Agriplex mid density markers"]
+        mural_etal_ub_catalog = [r for r in catalog if str(r.get("source") or "") == "Mural_etal_UB"]
+        meseret_catalog = [r for r in catalog if str(r.get("source") or "") in {"Meseret/BI", "BI/ICRISAT"}]
+        curated_catalog = [
+            r
+            for r in catalog
+            if str(r.get("source") or "") not in {"Agriplex mid density markers", "Mural_etal_UB", "Meseret/BI", "BI/ICRISAT"}
+        ]
+        generated_from = [
+            "dashboard/normalized_marker_catalog_updated.tsv",
+            "results/summary_region_class.tsv",
+            "results/summary_per_chromosome.tsv",
+            "results/summary_per_gene.tsv",
+        ]
+    else:
+        curated_catalog = read_catalog()
+        agriplex_mid_density_catalog = read_agriplex_mid_density()
+        mural_etal_ub_catalog = read_mural_etal_ub_markers()
+        meseret_catalog = read_meseret_panel()
+        catalog = curated_catalog + agriplex_mid_density_catalog + mural_etal_ub_catalog + meseret_catalog
+        add_canonical_ids(catalog)
+        generated_from = [
             "marker_catalog_304_corrected.tsv",
             "marker_list/2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf",
             "Ravi_Mural/Marker_Array_Design_Final.csv",
@@ -506,7 +570,15 @@ def main() -> None:
             "results/summary_region_class.tsv",
             "results/summary_per_chromosome.tsv",
             "results/summary_per_gene.tsv",
-        ],
+        ]
+
+    write_normalized_catalog(catalog)
+    region_summary = read_summary("results/summary_region_class.tsv")
+    chromosome_annotation = read_summary("results/summary_per_chromosome.tsv")
+    dense_genes = read_summary("results/summary_per_gene.tsv")[:20]
+
+    payload = {
+        "generatedFrom": generated_from,
         "totals": {
             "curatedMarkers": len(curated_catalog),
             "agriplexMidDensityMarkers": len(agriplex_mid_density_catalog),
