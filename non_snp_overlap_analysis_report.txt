@@ -1,0 +1,9 @@
+NON-SNP MARKER OVERLAP ANALYSIS REPORT
+======================================================================
+
+Total non-SNP markers:      119
+Non-overlapping markers:      105
+Redundant markers removed:       14
+
+Overlap groups: 9
+Markers in overlapping groups: 23

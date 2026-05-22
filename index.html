@@ -26,6 +26,14 @@
           <strong id="totalMarkers">0</strong>
         </div>
         <div class="metric">
+          <span>SNP markers</span>
+          <strong id="snpMarkers">0</strong>
+        </div>
+        <div class="metric">
+          <span>Non-SNP markers</span>
+          <strong id="nonSnpMarkers">0</strong>
+        </div>
+        <div class="metric">
           <span>Collaborators</span>
           <strong id="collaborators">0</strong>
         </div>
@@ -40,6 +48,14 @@
           <div class="filter-group">
             <label for="reviewerSource">Group</label>
             <select id="reviewerSource"></select>
+          </div>
+          <div class="filter-group">
+            <label>Marker type</label>
+            <div class="toggle-group" role="group" aria-label="Marker type">
+              <button class="toggle-button is-active" type="button" data-marker-type="All">All</button>
+              <button class="toggle-button" type="button" data-marker-type="SNP">SNP</button>
+              <button class="toggle-button" type="button" data-marker-type="Non-SNP">Non-SNP</button>
+            </div>
           </div>
           <div class="filter-group">
             <label for="traitFilter">Trait</label>
@@ -103,6 +119,7 @@
                   <th class="checkbox-col"><input id="selectAllCheckbox" type="checkbox" aria-label="Select all visible markers" /></th>
                   <th>Marker ID</th>
                   <th>Trait</th>
+                  <th>Type</th>
                   <th>Chr</th>
                   <th>Coordinate</th>
                   <th>Status</th>

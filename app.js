@@ -6,6 +6,7 @@ const state = {
   search: "",
   trait: "All",
   chrom: "All",
+  markerTypeGroup: "All",
 };
 
 const STORAGE_KEYS = {
@@ -21,6 +22,8 @@ const feedbackFormConfig = window.FEEDBACK_FORM_CONFIG || {
 
 const els = {
   totalMarkers: document.querySelector("#totalMarkers"),
+  snpMarkers: document.querySelector("#snpMarkers"),
+  nonSnpMarkers: document.querySelector("#nonSnpMarkers"),
   collaborators: document.querySelector("#collaborators"),
   selectedGroupBanner: document.querySelector("#selectedGroupBanner"),
   queueTitle: document.querySelector("#queueTitle"),
@@ -51,6 +54,8 @@ const els = {
   karyotypeSummary: document.querySelector("#karyotypeSummary"),
 };
 
+const markerTypeButtons = [...document.querySelectorAll("[data-marker-type]")];
+
 const format = new Intl.NumberFormat("en-US");
 let feedbackItems = loadJson(STORAGE_KEYS.feedback, []);
 let reviewer = loadJson(STORAGE_KEYS.reviewer, { name: "", source: "All" });
@@ -63,6 +68,10 @@ function uniqueValues(key) {
     if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
     return String(a).localeCompare(String(b));
   });
+}
+
+function markerTypeLabel(row) {
+  return row.markerTypeGroup || (row.markerType === "SNP" ? "SNP" : "Non-SNP");
 }
 
 function setOptions(select, values, label = "All") {
@@ -97,8 +106,9 @@ function catalogForSelectedGroup(applyFilters = true) {
     if (!applyFilters) return true;
     if (state.trait !== "All" && row.trait !== state.trait) return false;
     if (state.chrom !== "All" && row.chrom !== state.chrom) return false;
+    if (state.markerTypeGroup !== "All" && markerTypeLabel(row) !== state.markerTypeGroup) return false;
     if (!query) return true;
-    return [row.canonicalId, row.trait, row.locus, row.chrom, row.source, row.evidence, row.markerType]
+    return [row.canonicalId, row.trait, row.locus, row.chrom, row.source, row.evidence, row.markerType, markerTypeLabel(row)]
       .join(" ")
       .toLowerCase()
       .includes(query);
@@ -155,7 +165,7 @@ function renderMarkerSelect(rows) {
   rows.forEach((row) => {
     const option = document.createElement("option");
     option.value = row.canonicalId;
-    option.textContent = `${row.canonicalId} | ${row.trait || "No trait"} | Chr ${row.chrom || "-"} | ${formatPosition(row) || "No coordinate"}`;
+    option.textContent = `${row.canonicalId} | ${row.trait || "No trait"} | ${markerTypeLabel(row)} | Chr ${row.chrom || "-"} | ${formatPosition(row) || "No coordinate"}`;
     els.markerSelect.appendChild(option);
   });
 
@@ -183,7 +193,7 @@ function renderQueue() {
   if (!state.selectedGroup) {
     els.catalogBody.innerHTML = `
       <tr>
-        <td colspan="7" class="empty-table">Choose a group to load markers.</td>
+        <td colspan="8" class="empty-table">Choose a group to load markers.</td>
       </tr>
     `;
     renderCurrentMarker();
@@ -194,7 +204,7 @@ function renderQueue() {
   if (!rows.length) {
     els.catalogBody.innerHTML = `
       <tr>
-        <td colspan="7" class="empty-table">No markers match the current filters.</td>
+        <td colspan="8" class="empty-table">No markers match the current filters.</td>
       </tr>
     `;
     renderCurrentMarker();
@@ -215,6 +225,7 @@ function renderQueue() {
           </td>
           <td><button class="link-action" type="button" data-focus-marker="${escapeHtml(row.canonicalId)}">${escapeHtml(row.canonicalId)}</button></td>
           <td>${escapeHtml(row.trait)}</td>
+          <td><span class="type-pill ${markerTypeLabel(row) === "SNP" ? "type-snp" : "type-non-snp"}">${escapeHtml(markerTypeLabel(row))}</span></td>
           <td>${escapeHtml(row.chrom)}</td>
           <td>${formatPosition(row)}</td>
           <td>${status}</td>
@@ -297,6 +308,7 @@ function renderCurrentMarker() {
     <h2>${escapeHtml(marker.canonicalId)}</h2>
     <dl class="marker-facts">
       <div><dt>Trait</dt><dd>${escapeHtml(marker.trait)}</dd></div>
+      <div><dt>Type</dt><dd>${escapeHtml(markerTypeLabel(marker))}</dd></div>
       <div><dt>Original name</dt><dd>${escapeHtml(marker.originalName || marker.locus || "")}</dd></div>
       <div><dt>Chromosome</dt><dd>${escapeHtml(marker.chrom)}</dd></div>
       <div><dt>Position</dt><dd>${formatPosition(marker)}</dd></div>
@@ -317,6 +329,14 @@ function decisionLabel(value) {
   return labels[value] || "Reviewed";
 }
 
+function setMarkerTypeFilter(value, render = true) {
+  state.markerTypeGroup = value || "All";
+  markerTypeButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.markerType === state.markerTypeGroup);
+  });
+  if (render) renderQueue();
+}
+
 function formatPosition(row) {
   if (!row.posStart) return "";
   if (!row.posEnd || row.posEnd === row.posStart) return format.format(row.posStart);
@@ -330,6 +350,7 @@ function exportCsv() {
     "originalName",
     "trait",
     "markerType",
+    "markerTypeGroup",
     "chrom",
     "posStart",
     "posEnd",
@@ -562,9 +583,13 @@ function resetMarkerFilters(render = true) {
   state.search = "";
   state.trait = "All";
   state.chrom = "All";
+  state.markerTypeGroup = "All";
   els.searchInput.value = "";
   els.traitFilter.value = "All";
   els.chromFilter.value = "All";
+  markerTypeButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.markerType === "All");
+  });
   if (render) renderQueue();
 }
 
@@ -632,6 +657,13 @@ function bindEvents() {
   });
 
   els.resetFilters.addEventListener("click", () => resetMarkerFilters(true));
+  markerTypeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedMarkerIds.clear();
+      state.currentMarkerId = "";
+      setMarkerTypeFilter(button.dataset.markerType, true);
+    });
+  });
   els.exportCsv.addEventListener("click", exportCsv);
   els.selectAllVisible.addEventListener("click", selectAllVisibleMarkers);
   els.clearSelection.addEventListener("click", clearSelection);
@@ -678,6 +710,8 @@ function bindEvents() {
 
 function init() {
   els.totalMarkers.textContent = format.format(data.totals.totalMarkers);
+  els.snpMarkers.textContent = format.format(data.totals.snpMarkers || 0);
+  els.nonSnpMarkers.textContent = format.format(data.totals.nonSnpMarkers || 0);
   els.collaborators.textContent = format.format(data.totals.collaborators);
 
   const sources = uniqueValues("source");
@@ -692,6 +726,8 @@ function init() {
     reviewer.source = "All";
     els.reviewerSource.value = "All";
   }
+
+  setMarkerTypeFilter("All", false);
 
   bindEvents();
   updateFeedbackCount();

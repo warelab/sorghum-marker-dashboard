@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "dashboard" / "data.js"
 NORMALIZED_OUT = ROOT / "dashboard" / "normalized_marker_catalog.tsv"
 UPDATED_NORMALIZED_IN = ROOT / "dashboard" / "normalized_marker_catalog_updated.tsv"
+SNP_NON_OVERLAP = ROOT / "dashboard" / "snp_markers_non_overlapping.tsv"
+NON_SNP_NON_OVERLAP = ROOT / "dashboard" / "non_snp_markers_non_overlapping.tsv"
 MESERET_PANEL = ROOT / "Meseret_Wondifraw_BI" / "Sorghum_Panel_Shared.xlsb"
 AGRIPLEX_MID_DENSITY_VCF = ROOT / "marker_list" / "2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf"
 MURAL_ETAL_UB_MARKERS = ROOT / "Ravi_Mural" / "Marker_Array_Design_Final.csv"
@@ -209,6 +211,16 @@ def marker_class(row: dict[str, object]) -> str:
     return "GENE"
 
 
+def marker_type_group(row: dict[str, object]) -> str:
+    marker_type = str(row.get("markerType") or "").upper()
+    return "SNP" if marker_type == "SNP" else "Non-SNP"
+
+
+def apply_marker_type_group(rows: list[dict[str, object]]) -> None:
+    for row in rows:
+        row["markerTypeGroup"] = marker_type_group(row)
+
+
 def canonical_id(row: dict[str, object], fallback_serial: int) -> str:
     cls = marker_class(row)
     chrom = str(row.get("chrom") or "").strip()
@@ -287,6 +299,7 @@ def read_catalog() -> list[dict[str, object]]:
             if row:
                 rows.append(row)
     add_canonical_ids(rows)
+    apply_marker_type_group(rows)
     return rows
 
 
@@ -318,6 +331,7 @@ def read_normalized_catalog(path: Path) -> list[dict[str, object]]:
             row["locus"] = row["originalName"]
             if not row["canonicalId"]:
                 row["canonicalId"] = canonical_id(row, len(rows) + 1)
+            row["markerTypeGroup"] = marker_type_group(row)
             rows.append(row)
 
     seen: Counter[str] = Counter()
@@ -489,6 +503,14 @@ def read_summary(path: str) -> list[dict[str, object]]:
         return list(csv.DictReader(handle, delimiter="\t"))
 
 
+def read_non_overlapping_catalog() -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for path in (SNP_NON_OVERLAP, NON_SNP_NON_OVERLAP):
+        if path.exists():
+            rows.extend(read_normalized_catalog(path))
+    return rows
+
+
 def top_counts(rows: list[dict[str, object]], key: str, limit: int | None = None) -> list[dict[str, object]]:
     counts = Counter(str(row.get(key) or "Unspecified") for row in rows)
     items = [{"name": name, "count": count} for name, count in counts.most_common()]
@@ -539,17 +561,21 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
 def main() -> None:
     updated_catalog = read_normalized_catalog(UPDATED_NORMALIZED_IN)
     if updated_catalog:
-        catalog = updated_catalog
-        agriplex_mid_density_catalog = [r for r in catalog if str(r.get("source") or "") == "Agriplex mid density markers"]
-        mural_etal_ub_catalog = [r for r in catalog if str(r.get("source") or "") == "Mural_etal_UB"]
-        meseret_catalog = [r for r in catalog if str(r.get("source") or "") in {"Meseret/BI", "BI/ICRISAT"}]
+        full_catalog = updated_catalog
+        non_overlapping_catalog = read_non_overlapping_catalog()
+        catalog = non_overlapping_catalog if non_overlapping_catalog else updated_catalog
+        agriplex_mid_density_catalog = [r for r in full_catalog if str(r.get("source") or "") == "Agriplex mid density markers"]
+        mural_etal_ub_catalog = [r for r in full_catalog if str(r.get("source") or "") == "Mural_etal_UB"]
+        meseret_catalog = [r for r in full_catalog if str(r.get("source") or "") in {"Meseret/BI", "BI/ICRISAT"}]
         curated_catalog = [
             r
-            for r in catalog
+            for r in full_catalog
             if str(r.get("source") or "") not in {"Agriplex mid density markers", "Mural_etal_UB", "Meseret/BI", "BI/ICRISAT"}
         ]
         generated_from = [
             "dashboard/normalized_marker_catalog_updated.tsv",
+            "dashboard/snp_markers_non_overlapping.tsv",
+            "dashboard/non_snp_markers_non_overlapping.tsv",
             "results/summary_region_class.tsv",
             "results/summary_per_chromosome.tsv",
             "results/summary_per_gene.tsv",
@@ -561,6 +587,7 @@ def main() -> None:
         meseret_catalog = read_meseret_panel()
         catalog = curated_catalog + agriplex_mid_density_catalog + mural_etal_ub_catalog + meseret_catalog
         add_canonical_ids(catalog)
+        apply_marker_type_group(catalog)
         generated_from = [
             "marker_catalog_304_corrected.tsv",
             "marker_list/2023.CSHL.397samples.SAP.fixed.header.uniqcontig.sorted.vcf",
@@ -576,6 +603,7 @@ def main() -> None:
     region_summary = read_summary("results/summary_region_class.tsv")
     chromosome_annotation = read_summary("results/summary_per_chromosome.tsv")
     dense_genes = read_summary("results/summary_per_gene.tsv")[:20]
+    marker_type_groups = Counter(row.get("markerTypeGroup") for row in catalog)
 
     payload = {
         "generatedFrom": generated_from,
@@ -585,6 +613,8 @@ def main() -> None:
             "muralEtalUbMarkers": len(mural_etal_ub_catalog),
             "arrayPanelMarkers": len(meseret_catalog),
             "totalMarkers": len(catalog),
+            "snpMarkers": marker_type_groups.get("SNP", 0),
+            "nonSnpMarkers": marker_type_groups.get("Non-SNP", 0),
             "collaborators": len({row["source"] for row in catalog if row.get("source")}),
             "chromosomes": len({row["chrom"] for row in catalog if row.get("chrom") and row["chrom"] != "-"}),
         },

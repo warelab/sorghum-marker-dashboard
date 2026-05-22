@@ -1,0 +1,90 @@
+SNP MARKER OVERLAP ANALYSIS REPORT
+======================================================================
+
+SUMMARY STATISTICS
+======================================================================
+Total SNP markers (all sources):             14856
+Unique SNP positions (chr:pos):              12508
+Overlapping positions (2+ markers):           2271
+Markers at overlapping positions:             4619
+Non-overlapping markers (unique pos):        12508
+Redundant markers removed:                    2348
+
+RETENTION RATE
+======================================================================
+Unique positions kept: 12,508 / 14,856 = 84.2%
+
+SNP MARKERS BY SOURCE
+======================================================================
+All sources:
+source
+BI/ICRISAT                      9715
+Agriplex mid density markers    2421
+Mural_etal_UB                   2260
+ICRISAT/EiB                      255
+AAU-SLU Biotech/Sida              84
+Marla/KSU                         59
+Cuevas/USDA                       25
+Yerka/YJ                          15
+Behera/AAU                        10
+Jura/SbMATE                        8
+Tuinstra/Purdue                    3
+Saini/TTU                          1
+
+Non-overlapping set:
+source
+BI/ICRISAT                      7508
+Agriplex mid density markers    2389
+Mural_etal_UB                   2255
+ICRISAT/EiB                      167
+AAU-SLU Biotech/Sida              79
+Marla/KSU                         56
+Cuevas/USDA                       25
+Yerka/YJ                          15
+Behera/AAU                         9
+Tuinstra/Purdue                    3
+Jura/SbMATE                        1
+Saini/TTU                          1
+
+TOP OVERLAPPING POSITIONS (by marker count)
+======================================================================
+
+Chr3:71104827 (8 markers)
+  Traits: Aluminum tolerance
+  Sources: Jura/SbMATE
+
+Chr2:6045380 (4 markers)
+  Traits: Fertility restoration, Agriplex mid density markers, ICRISAT, Fertility restoration gene
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr2:6843380 (4 markers)
+  Traits: Fertility restoration, Agriplex mid density markers, ICRISAT, Fertility restoration gene
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr2:8715821 (4 markers)
+  Traits: Fertility restoration, Agriplex mid density markers, ICRISAT, Fertility restoration gene
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr2:61811307 (4 markers)
+  Traits: Drought/Fertility, Agriplex mid density markers, Post-flowering Drought tolerance, Fertility restoration gene
+  Sources: ICRISAT/EiB, Agriplex mid density markers
+
+Chr5:838874 (4 markers)
+  Traits: Shoot fly resistance, Agriplex mid density markers, ICRISAT
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr5:1608322 (4 markers)
+  Traits: Fertility restoration, Agriplex mid density markers, ICRISAT, Fertility restoration gene
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr5:69794954 (4 markers)
+  Traits: Striga resistance, Agriplex mid density markers, ICRISAT, Striga Resistance
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr5:69847924 (4 markers)
+  Traits: Striga resistance, Agriplex mid density markers, ICRISAT, Striga Resistance
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT
+
+Chr5:69851828 (4 markers)
+  Traits: Striga resistance, Agriplex mid density markers, ICRISAT, Striga Resistance
+  Sources: ICRISAT/EiB, Agriplex mid density markers, BI/ICRISAT

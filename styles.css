@@ -319,6 +319,35 @@ label {
   gap: 7px;
 }
 
+.toggle-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.toggle-button {
+  min-height: 34px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.toggle-button.is-active {
+  border-color: var(--accent);
+  background: #fff;
+  color: var(--accent-strong);
+  box-shadow: var(--shadow);
+}
+
 .filter-note {
   display: grid;
   gap: 5px;
@@ -471,6 +500,27 @@ tr.current-row {
 }
 
 .status-pill.reviewed {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.type-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.type-pill.type-snp {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.type-pill.type-non-snp {
   background: var(--accent-soft);
   color: var(--accent-strong);
 }
