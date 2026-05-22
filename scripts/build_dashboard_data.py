@@ -317,6 +317,7 @@ def read_normalized_catalog(path: Path) -> list[dict[str, object]]:
                 "originalName": str(raw.get("originalName") or raw.get("locus") or "").strip(),
                 "trait": str(raw.get("trait") or "").strip() or "Unspecified",
                 "markerType": str(raw.get("markerType") or "").strip() or "Unspecified",
+                "markerTypeGroup": str(raw.get("markerTypeGroup") or "").strip(),
                 "chrom": normalize_chrom(raw.get("chrom") or "-"),
                 "posStart": clean_int(str(raw.get("posStart") or "")),
                 "posEnd": clean_int(str(raw.get("posEnd") or "")),
@@ -331,7 +332,8 @@ def read_normalized_catalog(path: Path) -> list[dict[str, object]]:
             row["locus"] = row["originalName"]
             if not row["canonicalId"]:
                 row["canonicalId"] = canonical_id(row, len(rows) + 1)
-            row["markerTypeGroup"] = marker_type_group(row)
+            if not row["markerTypeGroup"]:
+                row["markerTypeGroup"] = marker_type_group(row)
             rows.append(row)
 
     seen: Counter[str] = Counter()
@@ -541,6 +543,7 @@ def write_normalized_catalog(catalog: list[dict[str, object]]) -> None:
         "originalName",
         "trait",
         "markerType",
+        "markerTypeGroup",
         "chrom",
         "posStart",
         "posEnd",
